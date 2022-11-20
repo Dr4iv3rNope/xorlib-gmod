@@ -10,15 +10,15 @@ local function playerReady(ply)
 end
 
 hook.Add("PlayerInitialSpawn", "xorlib_network_player", function(ply)
+	net.Start("xorlib_player_initial_spawn")
+	net.WriteEntity(ply)
+	net.SendOmit(ply)
+
 	if ply:IsBot() then
 		playerReady(ply)
 
 		return
 	end
-
-	net.Start("xorlib_player_initial_spawn")
-	net.WriteEntity(ply)
-	net.SendOmit(ply)
 
 	local hookName = "xorlib_network_player_init_" .. ply:UserID()
 
