@@ -12,18 +12,18 @@ function x.Callee(addLevel, flags)
 
 		addLevel = addLevel - 1
 	else
-		addLevel = 0
+		addLevel = 1
 	end
 
-	addLevel = addLevel + 3
+	addLevel = addLevel + 1
 
 	return debug_getinfo(addLevel, flags)
 end
 
 function x.CalleePath(addLevel)
-	addLevel = (addLevel or 0) + 3
+	addLevel = (addLevel or 1) + 1
 
-	local info = debug_getinfo(addLevel, "S")
+	local info = debug_getinfo(addLevel, "Sn")
 
-	return info.source .. ":" .. info.linedefined
+	return (info.name or "<unknown>") .. ":" .. info.source .. ":" .. info.linedefined
 end
