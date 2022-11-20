@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/functional", "sh_getters.lua") -- X.CalleePath
+
 local string_format			= string.format
 local MsgC					= MsgC
 local error					= error
