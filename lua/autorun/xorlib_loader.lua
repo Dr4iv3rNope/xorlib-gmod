@@ -89,9 +89,11 @@ local function recursiveInclude(subfolder)
 		return loaderPrint("subpath %s is invalid", subfolder)
 	end
 
+	local LUA_EXT_PATTERN = "%.lua$"
+
 	for _, filename in ipairs(sortByShared(files)) do
 		if filename ~= USE_XORLIB_FILENAME then
-			if path:match(filename) then
+			if filename:match(LUA_EXT_PATTERN) then
 				includePlugin(subfolder, filename)
 			else
 				loaderPrint("unknown file type: %s/%s", subfolder, filename)
