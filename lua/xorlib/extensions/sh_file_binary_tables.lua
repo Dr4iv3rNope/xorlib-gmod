@@ -1,3 +1,5 @@
+local FILE = FindMetaTable("File")
+
 local BIN_TABLE_TYPE_TABLE_BEGIN = 0
 local BIN_TABLE_TYPE_TABLE_END = 1
 local BIN_TABLE_TYPE_NIL = 2
@@ -56,10 +58,10 @@ binaryTableReader[BIN_TABLE_TYPE_ANGLE] = function(f)
 end
 
 local function peekBinaryTableType(f)
-	local prevPos = f:Tell()
+	local prev_pos = f:Tell()
 	local t = f:ReadByte()
 
-	f:Seek(prevPos)
+	f:Seek(prev_pos)
 	return t
 end
 
@@ -163,14 +165,14 @@ binaryTableWriter["Angle"] = function(f, ang)
 	f:WriteAngle(ang)
 end
 
-local function binaryTableWriteValue(f, v, writtenTables)
+local function binaryTableWriteValue(f, v, written_tables)
 	local t = type(v)
 	local writer = binaryTableWriter[t]
 
 	if writer then
 		writer(f, v)
 	elseif t == "table" then
-		f:WriteBinaryTable(v, writtenTables)
+		f:WriteBinaryTable(v, written_tables)
 	elseif IsColor(v) then
 		f:WriteByte(BIN_TABLE_TYPE_COLOR)
 		f:WriteColor(v)
