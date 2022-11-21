@@ -114,7 +114,7 @@ local function findRequirers()
 
 		for i, dir in ipairs(dirs) do
 			if file.Exists(string.format("%s/%s", dir, USE_XORLIB_FILENAME), "LUA") then
-				table.insert(dirs, dir)
+				table.insert(requirers, dir)
 			end
 		end
 	end
