@@ -7,7 +7,7 @@ x.SetupScreenSize(function(w, h)
 
 		local x, y = panel:LocalToScreen(0, 0)
 
-		surface.SetDrawColor(x.ColorWhite)
+		surface.SetDrawColor(255, 255, 255)
 		surface.SetMaterial(BLUR_MATERIAL)
 
 		for i = 1, passes do
