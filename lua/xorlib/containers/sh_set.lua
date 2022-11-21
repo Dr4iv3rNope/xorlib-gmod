@@ -7,11 +7,11 @@ local table_remove	= table.remove
 local SET = {}
 
 function SET.__index(tbl, k)
-	return rawget(SET, k) or rawget(tbl, "values")[k]
+	return rawget(SET, k) or rawget(tbl, "Values")[k]
 end
 
 function SET.__newindex(tbl, index, value)
-	local values = rawget(tbl, "values")
+	local values = rawget(tbl, "Values")
 
 	if values[index] == nil then
 		SET.Insert(tbl, value)
@@ -23,15 +23,15 @@ function SET.__newindex(tbl, index, value)
 end
 
 function SET:Length()
-	return #rawget(self, "values")
+	return #rawget(self, "Values")
 end
 
 function SET:Has(key)
-	return rawget(self, "keys")[key] ~= nil
+	return rawget(self, "Keys")[key] ~= nil
 end
 
 function SET:Insert(...)
-	local keys, values = rawget(self, "keys"), rawget(self, "values")
+	local keys, values = rawget(self, "Keys"), rawget(self, "Values")
 	local length = #values
 	local pos, value
 
@@ -66,7 +66,7 @@ function SET:Insert(...)
 end
 
 function SET:Remove(pos)
-	local keys, values = rawget(self, "keys"), rawget(self, "values")
+	local keys, values = rawget(self, "Keys"), rawget(self, "Values")
 
 	local value = values[pos]
 	if value == nil then return end
@@ -80,7 +80,7 @@ function SET:Remove(pos)
 end
 
 function SET:Delete(key)
-	local keys, values = rawget(self, "keys"), rawget(self, "values")
+	local keys, values = rawget(self, "Keys"), rawget(self, "Values")
 
 	local index = keys[key]
 	if index == nil then return end
@@ -92,7 +92,7 @@ function SET:Delete(key)
 end
 
 function SET:Reconstruct(from)
-	local keys, values = rawget(self, "keys"), rawget(self, "values")
+	local keys, values = rawget(self, "Keys"), rawget(self, "Values")
 
 	for i = from, #values do
 		local v = values[i]
@@ -103,8 +103,8 @@ end
 
 function x.SetFromSequential(tbl)
 	local list = setmetatable({
-		keys = {},
-		values = tbl
+		Keys = {},
+		Values = tbl
 	}, SET)
 
 	list:Reconstruct(1)
@@ -120,14 +120,14 @@ function x.SetFromKeys(tbl)
 	end
 
 	return setmetatable({
-		keys = keys,
-		values = values
+		Keys = keys,
+		Values = values
 	}, SET)
 end
 
 function x.Set()
 	return setmetatable({
-		keys = {},
-		values = {}
+		Keys = {},
+		Values = {}
 	}, SET)
 end

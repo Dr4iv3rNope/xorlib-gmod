@@ -2,43 +2,43 @@ local LINKED_LIST = {}
 LINKED_LIST.__index = LINKED_LIST
 
 function LINKED_LIST:PushFront(value)
-	local firstNode = self.first
+	local firstNode = self.First
 
 	local node = {
-		value = value,
-		next = firstNode,
-		prev = nil
+		Value = value,
+		Next = firstNode,
+		Prev = nil
 	}
 
 	if firstNode then
-		firstNode.prev = node
+		firstNode.Prev = node
 	else
-		self.last = node
+		self.Last = node
 	end
 
-	self.first = node
-	self.count = self.count + 1
+	self.First = node
+	self.Count = self.Count + 1
 
 	return node
 end
 
 function LINKED_LIST:PushBack(value)
-	local lastNode = self.last
+	local lastNode = self.Last
 
 	local node = {
-		value = value,
-		next = nil,
-		prev = lastNode
+		Value = value,
+		Next = nil,
+		Prev = lastNode
 	}
 
 	if lastNode then
-		lastNode.next = node
+		lastNode.Next = node
 	else
-		self.first = node
+		self.First = node
 	end
 
-	self.last = node
-	self.count = self.count + 1
+	self.Last = node
+	self.Count = self.Count + 1
 
 	return node
 end
@@ -48,106 +48,106 @@ function LINKED_LIST:Insert(pos, value)
 		return self:PushFront(value)
 	end
 
-	local posNode = self:at(pos)
-	local nextNode = posNode.next
-	local prevNode = posNode.prev
+	local posNode = self:At(pos)
+	local nextNode = posNode.Next
+	local prevNode = posNode.Prev
 
 	local node = {
-		value = value,
-		next = posNode.next,
-		prev = posNode.prev
+		Value = value,
+		Next = posNode.Next,
+		Prev = posNode.Prev
 	}
 
 	if nextNode then
-		nextNode.prev = node
+		nextNode.Prev = node
 	else
 		-- make this node last
-		self.last = node
+		self.Last = node
 	end
 
 	if prevNode then
-		prevNode.next = node
+		prevNode.Next = node
 	else
 		-- make this node first
-		self.first = node
+		self.First = node
 	end
 
-	self.count = self.count + 1
+	self.Count = self.Count + 1
 
 	return node
 end
 
 function LINKED_LIST:Delete(node)
-	local nextNode = node.next
-	local prevNode = node.prev
+	local nextNode = node.Next
+	local prevNode = node.Prev
 
 	if nextNode then
-		nextNode.prev = prevNode
+		nextNode.Prev = prevNode
 	else
-		self.last = prevNode
+		self.Last = prevNode
 	end
 
 	if prevNode then
-		prevNode.next = nextNode
+		prevNode.Next = nextNode
 	else
-		self.first = nextNode
+		self.First = nextNode
 	end
 
-	self.count = self.count - 1
+	self.Count = self.Count - 1
 
 	return node
 end
 
 function LINKED_LIST:DeleteByValue(value)
-	for node in self:iterate() do
-		if node.value == value then
-			self:delete(node)
+	for node in self:Iterate() do
+		if node.Value == value then
+			self:Delete(node)
 		end
 	end
 end
 
 function LINKED_LIST:Remove(pos)
-	local node = self:at(pos)
+	local node = self:At(pos)
 	if not node then return end
 
-	return self:delete(node)
+	return self:Delete(node)
 end
 
 function LINKED_LIST:PopFront()
-	local first = self.first
+	local first = self.First
 	if not first then return end
 
-	self.first = first.next
+	self.First = first.Next
 
-	return first.value
+	return first.Value
 end
 
 function LINKED_LIST:PopBack()
-	local last = self.last
+	local last = self.Last
 	if not last then return end
 
-	self.last = last.prev
+	self.Last = last.Prev
 	return last
 end
 
 function LINKED_LIST:At(index)
 	if index <= 1 then
-		return self.first
-	elseif index >= self.count then
-		return self.last
+		return self.First
+	elseif index >= self.Count then
+		return self.Last
 	end
 
-	return x.AdvanceNode(self.first, index - 1)
+	return x.AdvanceNode(self.First, index - 1)
 end
 
 function LINKED_LIST:Iterate()
-	local node = self.first
+	local node = self.First
 
 	return function()
 		local curNode = node
 
 		if curNode then
-			node = node.next
+			node = node.Next
 
 			return curNode
 		end
@@ -155,13 +155,13 @@ function LINKED_LIST:Iterate()
 end
 
 function LINKED_LIST:IterateReverse()
-	local node = self.last
+	local node = self.Last
 
 	return function()
 		local curNode = node
 
 		if curNode then
-			node = node.prev
+			node = node.Prev
 
 			return curNode
 		end
@@ -170,7 +170,7 @@ end
 
 function x.AdvanceNode(node, count)
 	while node and count > 0 do
-		node = node.next
+		node = node.Next
 		count = count - 1
 	end
 
@@ -179,9 +179,9 @@ end
 
 function x.LinkedList()
 	return setmetatable({
-		count = 0,
-		first = nil,
-		last = nil
+		Count = 0,
+		First = nil,
+		Last = nil
 	}, LINKED_LIST)
 end
 
