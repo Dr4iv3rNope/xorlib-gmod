@@ -3,7 +3,7 @@ x = xorlib
 
 local PRINT_PREFIX = CLIENT and "CLIENT" or "SERVER"
 
-local USE_XORLIB_FILENAME = ".use_xorlib"
+local USE_XORLIB_FILENAME = "!.use_xorlib"
 
 local ignoreIncludes -- will be set in includeAll function
 
