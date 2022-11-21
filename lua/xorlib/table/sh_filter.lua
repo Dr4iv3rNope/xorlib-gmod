@@ -24,7 +24,7 @@ function x.FilterCopySequence(tbl, callback)
 		local v = tbl[i]
 
 		if callback(v) then
-			newTable[#newTable] = v
+			newTable[#newTable + 1] = v
 		end
 	end
 
