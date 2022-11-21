@@ -3,7 +3,7 @@ x = xorlib
 
 local PRINT_PREFIX = CLIENT and "CLIENT" or "SERVER"
 
-local USE_XORLIB_FILENAME = "!.use_xorlib"
+local USE_XORLIB_FILENAME = "!.use_xorlib.lua"
 
 local ignoreIncludes -- will be set in includeAll function
 
@@ -139,6 +139,10 @@ function xorlib.IncludeAll()
 
 	for i, dir in ipairs(findRequirers()) do
 		loaderPrint("including requirer: %s", dir)
+
+		if SERVER then
+			AddCSLuaFile(string.format("%s/%s", dir, USE_XORLIB_FILENAME))
+		end
 
 		recursiveInclude(dir)
 	end
