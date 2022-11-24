@@ -38,5 +38,5 @@ local function removePlayer(ply)
 	accountIDPlayers[ply:AccountID()] = nil
 end
 
-hook.Add("PlayerInitialSpawn", "xorlib_id_getters", addPlayer, HOOK_MONITOR_HIGH)
+hook.Add("PlayerInitialSpawn", "xorlib_id_getters", x.Bind(timer.Simple, 0, addPlayer), HOOK_MONITOR_HIGH)
 hook.Add("PlayerDisconnected", "xorlib_id_getters", removePlayer, HOOK_MONITOR_LOW)
