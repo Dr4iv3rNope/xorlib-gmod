@@ -1,6 +1,5 @@
 local rawget		= rawget
 local rawset		= rawset
-local select		= select
 local table_insert	= table.insert
 local table_remove	= table.remove
 
@@ -15,11 +14,9 @@ function SET.__newindex(tbl, index, value)
 
 	if values[index] == nil then
 		SET.Insert(tbl, value)
-
-		return
+	else
+		rawset(values, index, value)
 	end
-
-	rawset(values, index, value)
 end
 
 function SET:Length()
@@ -30,17 +27,17 @@ function SET:Has(key)
 	return rawget(self, "Keys")[key] ~= nil
 end
 
-function SET:Insert(...)
+function SET:Insert(a, b)
 	local keys, values = rawget(self, "Keys"), rawget(self, "Values")
 	local length = #values
 	local pos, value
 
-	if select("#", ...) == 1 then
+	if b == nil then
 		pos = length + 1
-		value = select(1, ...)
+		value = a
 	else
-		pos = select(1, ...)
-		value = select(2, ...)
+		pos = a
+		value = b
 	end
 
 	local index = keys[value]
