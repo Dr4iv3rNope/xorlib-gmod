@@ -24,10 +24,9 @@ function x.FormatTime(time, formatType)
 		local amount
 
 		if formatter.div then
-			if isLast then
-				amount = floor(temp / formatter.div)
-			else
-				amount = floor(temp % formatter.div)
+			amount = floor(temp % formatter.div)
+
+			if not isLast then
 				temp = floor(temp / formatter.div)
 			end
 		else
