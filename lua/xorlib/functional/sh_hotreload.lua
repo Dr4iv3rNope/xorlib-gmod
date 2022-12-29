@@ -14,11 +14,8 @@ function x.EnsureInitialized(callback)
 end
 
 function x.EnsureInitPostEntity(callback)
-	local callbacks = hook.GetTable().InitPostEntity or {}
-	local hasLibraryPlaceholder = callbacks["xorlib initpostentity"] ~= nil
-
-	if hasLibraryPlaceholder then
-		local name = tostring(table.Count(callbacks) + 1)
+	if not x._InitPostEntity then
+		local name = tostring(table.Count(hook.GetTable().InitPostEntity or {}) + 1)
 
 		hook.Once("InitPostEntity", name, function()
 			callback()
@@ -28,4 +25,10 @@ function x.EnsureInitPostEntity(callback)
 	end
 end
 
-hook.Once("InitPostEntity", "xorlib initpostentity", function() x.Print("InitPostEntity!") end, HOOK_MONITOR_HIGH)
+if not x._InitPostEntity then
+	hook.Once("InitPostEntity", "xorlib initpostentity", function()
+		x._InitPostEntity = true
+
+		x.Print("InitPostEntity!")
+	end, HOOK_MONITOR_HIGH)
+end
