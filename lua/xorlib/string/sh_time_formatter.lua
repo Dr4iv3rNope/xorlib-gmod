@@ -24,9 +24,10 @@ function x.FormatTime(time, formatType)
 		local amount
 
 		if formatter.div then
-			amount = floor(temp % formatter.div)
-
-			if not isLast then
+			if isLast then
+				amount = temp
+			else
+				amount = floor(temp % formatter.div)
 				temp = floor(temp / formatter.div)
 			end
 		else
@@ -52,9 +53,10 @@ function x.FormatTimeOnly(time, formatType)
 		local isLast = i == formatType
 
 		if formatter.div then
-			amount = floor(temp % formatter.div)
-
-			if not isLast then
+			if isLast then
+				amount = temp
+			else
+				amount = floor(temp % formatter.div)
 				temp = floor(temp / formatter.div)
 			end
 		else
