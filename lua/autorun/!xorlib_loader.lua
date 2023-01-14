@@ -101,7 +101,7 @@ local function recursiveInclude(subfolder)
 		end
 	end
 
-	for _, dir in SortedPairs(dirs) do
+	for _, dir in ipairs(dirs) do
 		recursiveInclude(subfolder .. "/" .. dir)
 	end
 end
@@ -148,7 +148,7 @@ function xorlib.IncludeAll()
 	end
 
 	ignoreIncludes = nil
-	xorlib.Dependency = function() end -- hot reload support
+	function xorlib.Dependency() end -- hot reload support
 end
 
 timer.Create("xorlib anti replacement", 0, 0, function()
