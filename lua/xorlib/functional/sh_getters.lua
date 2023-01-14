@@ -20,10 +20,15 @@ function x.Callee(addLevel, flags)
 	return debug_getinfo(addLevel, flags)
 end
 
+local UNKNOWN_SOURCE = {
+	source = "<unknown>",
+	linedefined = -1
+}
+
 function x.CalleePath(addLevel)
 	addLevel = (addLevel or 1) + 1
 
-	local info = debug_getinfo(addLevel, "Sn")
+	local info = debug_getinfo(addLevel, "Sn") or UNKNOWN_SOURCE
 
 	return (info.name or "<unknown>") .. ":" .. info.source .. ":" .. info.linedefined
 end
