@@ -1,4 +1,5 @@
 xorlib.Dependency("xorlib/steamwebapi", "sv_webapi.lua")
+if not x.SteamWebApiInterface then return end
 
 x.STEAM_WEB_API_PLAYER_SUMMARY_PROVIDER = x.STEAM_WEB_API_PLAYER_SUMMARY_PROVIDER or {}
 x.STEAM_WEB_API_PLAYER_SUMMARY_PROVIDER.__index = x.STEAM_WEB_API_PLAYER_SUMMARY_PROVIDER
