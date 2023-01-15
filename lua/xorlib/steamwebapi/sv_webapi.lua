@@ -1,4 +1,4 @@
-if not x.RequireModule("chttp") then return end
+local CHTTP = x.RequireModule("chttp") and CHTTP or HTTP
 
 x.STEAM_WEB_API_INTERFACE = x.STEAM_WEB_API_INTERFACE or {}
 x.STEAM_WEB_API_INTERFACE.__index = x.STEAM_WEB_API_INTERFACE
@@ -47,18 +47,17 @@ function x.STEAM_WEB_API_INTERFACE:Request(interface, method, version, query, ca
 			end
 		end,
 
-		failed = function(code, body)
+		failed = function(err)
 			x.Warn(
-				"[Steam Web API] Request %s/%s/%04d failed (%d):\nBody: %s",
+				"[Steam Web API] Request %s/%s/%04d failed: %s",
 				interface,
 				method,
 				version,
-				code,
-				tostring(body)
+				err
 			)
 
 			if callback then
-				callback(body, code)
+				callback(err)
 			end
 		end
 	})
