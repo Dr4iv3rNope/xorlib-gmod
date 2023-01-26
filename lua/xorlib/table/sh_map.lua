@@ -8,6 +8,8 @@ function x.MapSequence(tbl, callback)
 			tbl[i] = newValue
 		end
 	end
+
+	return tbl
 end
 
 function x.MapCopySequence(tbl, callback)
@@ -40,6 +42,8 @@ function x.MapPairs(tbl, callback)
 			end
 		end
 	end
+
+	return tbl
 end
 
 function x.MapCopyPairs(tbl, callback)
