@@ -33,7 +33,7 @@ end
 
 function x.FilterPairs(tbl, callback)
 	for k, v in pairs(tbl) do
-		if not callback(v) then
+		if not callback(k, v) then
 			tbl[k] = nil
 		end
 	end
@@ -42,6 +42,50 @@ function x.FilterPairs(tbl, callback)
 end
 
 function x.FilterCopyPairs(tbl, callback)
+	local newTable = {}
+
+	for k, v in pairs(tbl) do
+		if callback(k, v) then
+			newTable[k] = v
+		end
+	end
+
+	return newTable
+end
+
+function x.FilterKeys(tbl, callback)
+	for k, v in pairs(tbl) do
+		if not callback(k) then
+			tbl[k] = nil
+		end
+	end
+
+	return tbl
+end
+
+function x.FilterCopyKeys(tbl, callback)
+	local newTable = {}
+
+	for k, v in pairs(tbl) do
+		if callback(k) then
+			newTable[k] = v
+		end
+	end
+
+	return newTable
+end
+
+function x.FilterValues(tbl, callback)
+	for k, v in pairs(tbl) do
+		if not callback(v) then
+			tbl[k] = nil
+		end
+	end
+
+	return tbl
+end
+
+function x.FilterCopyValues(tbl, callback)
 	local newTable = {}
 
 	for k, v in pairs(tbl) do
