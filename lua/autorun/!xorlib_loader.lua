@@ -153,7 +153,7 @@ end
 
 timer.Create("xorlib anti replacement", 0, 0, function()
 	if x ~= xorlib then
-		x.ErrorNoHalt("Some addon replaced xorlib (x) library!")
+		ErrorNoHalt("Some addon replaced xorlib (_G.x) library!")
 
 		x = xorlib
 	end
