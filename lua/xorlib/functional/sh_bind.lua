@@ -573,11 +573,13 @@ function x.Bind(f, ...)
 		local arg = select(i, ...)
 
 		if debug_getmetatable(arg) == PLACEHOLDER then
+			local swap = swapArguments[arg][i]
+
 			modifyArguments = function(
 				oa1, oa2, oa3, oa4, oa5, oa6, oa7, oa8, oa9,
 				ma1, ma2, ma3, ma4, ma5, ma6, ma7, ma8, ma9
 			)
-				ma1, ma2, ma3, ma4, ma5, ma6, ma7, ma8, ma9 = swapArguments[arg][i](
+				ma1, ma2, ma3, ma4, ma5, ma6, ma7, ma8, ma9 = swap(
 					oa1, oa2, oa3, oa4, oa5, oa6, oa7, oa8, oa9,
 					ma1, ma2, ma3, ma4, ma5, ma6, ma7, ma8, ma9
 				)
@@ -588,11 +590,13 @@ function x.Bind(f, ...)
 				)
 			end
 		else
+			local bind = bindArguments[i]
+
 			modifyArguments = function(
 				oa1, oa2, oa3, oa4, oa5, oa6, oa7, oa8, oa9,
 				ma1, ma2, ma3, ma4, ma5, ma6, ma7, ma8, ma9
 			)
-				ma1, ma2, ma3, ma4, ma5, ma6, ma7, ma8, ma9 = bindArguments[i](ma1, ma2, ma3, ma4, ma5, ma6, ma7, ma8, ma9)
+				ma1, ma2, ma3, ma4, ma5, ma6, ma7, ma8, ma9 = bind(ma1, ma2, ma3, ma4, ma5, ma6, ma7, ma8, ma9)
 
 				return oModifyArguments(
 					oa1, oa2, oa3, oa4, oa5, oa6, oa7, oa8, oa9,
