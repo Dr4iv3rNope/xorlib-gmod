@@ -3,7 +3,8 @@ x = xorlib
 
 local PRINT_PREFIX = CLIENT and "CLIENT" or "SERVER"
 
-local USE_XORLIB_FILENAME = "!.use_xorlib.lua"
+local USE_XORLIB_FILENAME	= "!.use_xorlib.lua"
+local XORLIB_SETUP_FILENAME	= "!.xorlib_setup.lua"
 
 local ignoreIncludes -- will be set in includeAll function
 
@@ -45,9 +46,20 @@ local includers = {
 	end
 }
 
+function xorlib.IsPluginAllowed(subfolder, filename)
+	-- can be overrided to prevent loading plugins
+	return true
+end
+
 local function includePlugin(subfolder, filename)
 	-- ignoring requirer
 	if filename == USE_XORLIB_FILENAME then return end
+
+	if not xorlib.IsPluginAllowed(subfolder, filename) then
+		loaderPrint("prevent loading %s/%s", subfolder, filename)
+
+		return
+	end
 
 	-- already loaded
 	if ignoreIncludes[subfolder .. filename] then return end
@@ -106,6 +118,14 @@ local function recursiveInclude(subfolder)
 	end
 end
 
+local function runSetup()
+	local setupFilepath = "xorlib/" .. XORLIB_SETUP_FILENAME
+
+	if file.Exists(setupFilepath, "LUA") then
+		includers["sh_"](setupFilepath)
+	end
+end
+
 local function findRequirers()
 	local requirers = {}
 
@@ -122,18 +142,18 @@ local function findRequirers()
 	return requirers
 end
 
-function xorlib.IncludeAll()
-	ignoreIncludes = {}
-
-	function xorlib.Dependency(subfolder, filename)
-		if not filename then
-			-- include whole directory
-			recursiveInclude(subfolder)
-		else
-			-- include just one file
-			includePlugin(subfolder, filename)
-		end
+function xorlib.Dependency(subfolder, filename)
+	if not filename then
+		-- include whole directory
+		recursiveInclude(subfolder)
+	else
+		-- include just one file
+		includePlugin(subfolder, filename)
 	end
+end
+
+function xorlib.IncludeAll()
+	runSetup()
 
 	recursiveInclude("xorlib")
 
@@ -146,9 +166,6 @@ function xorlib.IncludeAll()
 
 		recursiveInclude(dir)
 	end
-
-	ignoreIncludes = nil
-	function xorlib.Dependency() end -- hot reload support
 end
 
 timer.Create("xorlib anti replacement", 0, 0, function()
