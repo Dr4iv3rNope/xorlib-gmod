@@ -153,6 +153,8 @@ function xorlib.Dependency(subfolder, filename)
 end
 
 function xorlib.IncludeAll()
+	ignoreIncludes = {}
+
 	runSetup()
 
 	recursiveInclude("xorlib")
