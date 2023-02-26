@@ -1,60 +1,56 @@
 xorlib.Dependency("xorlib/hook", "sh_hooks.lua")	-- HOOK_*
-xorlib.Dependency("xorlib/table", "sh_remove.lua")	-- x.EmptySequence
+xorlib.Dependency("xorlib/table", "sh_remove.lua")	-- x.FilterSequence, x.RemoveSequenceValue
 
 x.PlayerGettersCache = x.PlayerGettersCache or {}
 
 function x.RebuildPlayerGetters(funcName)
-	local cache		= x.Assert(x.PlayerGettersCache[funcName], "Player getters \"%s\" is not registered!", funcName)
-	local filter	= cache.Filter
-	local players	= player.GetAll()
+	local cache = x.Assert(x.PlayerGettersCache[funcName], "Player getters \"%s\" is not registered!", funcName)
 
-	x.EmptySequence(cache.Players)
+	cache.Players = player.GetAll()
 
-	for i = 1, #players do
-		local ply = players[i]
-
-		if filter(ply) then
-			table.insert(cache.Players, ply)
-		end
-	end
+	x.FilterSequence(cache.Players, cache.Filter)
 end
 
 function x.RegisterPlayerGetters(funcName, filter)
-	local cachedPlayers = x.PlayerGettersCache[funcName]
+	local cache = x.PlayerGettersCache[funcName]
 
-	if cachedPlayers then
-		cachedPlayers = cachedPlayers.Players
-
-		x.RebuildPlayerGetters(funcName)
-	else
-		local cache = {
-			FunctionName	= funcName,
-			Filter			= filter,
-			Players			= {}
+	if not cache then
+		cache = {
+			Filter	= filter,
+			Players	= {}
 		}
 
 		x.PlayerGettersCache[funcName] = cache
-		cachedPlayers = cache.Players
 	end
 
 	hook.Add("PlayerInitialSpawn", "xorlib_player_getter_" .. funcName, function(ply)
 		if not filter(ply) then return end
 
-		table.insert(cachedPlayers, ply)
+		table.insert(cache.Players, ply)
 	end, HOOK_MONITOR_HIGH)
 
 	hook.Add("PlayerDisconnected", "xorlib_player_getter_" .. funcName, function(ply)
-		x.RemoveSequenceValue(cachedPlayers, ply)
-	end)
+		x.RemoveSequenceValue(cache.Players, ply)
+	end, HOOK_MONITOR_LOW)
 
-	local fullFuncName = "Get" .. funcName .. "Players"
+	x["Get" .. funcName .. "Players"] = function()
+		return cache.Players
+	end
 
-	x[fullFuncName] = function()
-		return cachedPlayers
+	x.RebuildPlayerGetters(funcName)
+end
+
+local function registerPlayerGetters()
+	local dontCreateDefaultGetters = hook.Run("XRegisterPlayerGetters")
+
+	if not dontCreateDefaultGetters then
+		x.RegisterPlayerGetters("SuperAdmin", x.Meta("Player", "IsSuperAdmin"))
+		x.RegisterPlayerGetters("Admin", x.Meta("Player", "IsAdmin"))
 	end
 end
 
-x.EnsureInitialized(function()
-	x.RegisterPlayerGetters("SuperAdmin", x.Meta("Player", "IsSuperAdmin"))
-	x.RegisterPlayerGetters("Admin", x.Meta("Player", "IsAdmin"))
-end)
+if sam then
+	hook.Once("SAM.LoadedRanks", "xorlib_player_getters", registerPlayerGetters)
+else
+	x.EnsureInitPostEntity(registerPlayerGetters)
+end
