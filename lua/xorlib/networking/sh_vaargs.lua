@@ -3,7 +3,7 @@ local select = select
 
 x.NetworkTypesSerializers =
 {
-	nil		= { t = TYPE_NIL, w = function() end },
+	["nil"]	= { t = TYPE_NIL, w = function() end },
 	number	= { t = TYPE_NUMBER, w = net.WriteFloat },
 	boolean	= { t = TYPE_BOOL, w = net.WriteBool },
 	string	= { t = TYPE_STRING, w = net.WriteString },
