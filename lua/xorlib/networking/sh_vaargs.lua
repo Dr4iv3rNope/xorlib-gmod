@@ -3,6 +3,7 @@ local select = select
 
 x.NetworkTypesSerializers =
 {
+	nil		= { t = TYPE_NIL, w = function() end },
 	number	= { t = TYPE_NUMBER, w = net.WriteFloat },
 	boolean	= { t = TYPE_BOOL, w = net.WriteBool },
 	string	= { t = TYPE_STRING, w = net.WriteString },
@@ -20,6 +21,7 @@ x.NetworkTypesSerializers.NextBot	= x.NetworkTypesSerializers.Entity
 
 x.NetworkTypesDeserializers =
 {
+	[TYPE_NIL]		= function() return nil end,
 	[TYPE_NUMBER]	= net.ReadFloat,
 	[TYPE_BOOL]		= net.ReadBool,
 	[TYPE_STRING]	= net.ReadString,
