@@ -1,4 +1,8 @@
 local prettiers = {
+	["nil"] = function()
+		return "nil"
+	end,
+
 	number = function(x)
 		return tostring(x)
 	end,
