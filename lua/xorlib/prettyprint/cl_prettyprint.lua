@@ -32,7 +32,7 @@ prettiers.Vehicle	= prettiers.Entity
 prettiers.NPC		= prettiers.Entity
 prettiers.NextBot	= prettiers.Entity
 
-function x.PrettyPrintData(data)
+function x.PrettyData(data)
 	for i = 1, #data do
 		local v = data[i]
 		local prettier = prettiers[type(v)]
@@ -44,7 +44,11 @@ function x.PrettyPrintData(data)
 		end
 	end
 
-	chat.AddText(unpack(data))
+	return data
+end
+
+function x.PrettyPrintData(data)
+	chat.AddText(unpack(x.PrettyData(data)))
 end
 
 function x.PrettyPrint(...)
