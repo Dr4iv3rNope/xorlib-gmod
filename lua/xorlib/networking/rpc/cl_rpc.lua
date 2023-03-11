@@ -20,14 +20,14 @@ local function parseFunctionName(name)
 
 	for i = 1, #indices do
 		if type(result) ~= "table" then
-			error("table expected. Last index is %s", indices[i - 1])
+			x.Error("table expected. Last index is %s", indices[i - 1])
 		end
 
 		local index = indices[i]
 		result = result[index]
 
 		if not allowedParseResult[type(result)] then
-			error("table or function expected. Index: %s", index)
+			x.Error("table or function expected. Index: %s", index)
 		end
 	end
 
