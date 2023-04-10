@@ -190,20 +190,6 @@ function hook.Add(event, id, callback, priority)
 	hookExecuteList[event] = newList
 end
 
-function hook.Once(event, id, callback, priority)
-	x.ExpectFunction(callback)
-
-	local oldCallback = callback
-
-	callback = function(...)
-		hook.Remove(event, id)
-
-		oldCallback(...)
-	end
-
-	hook.Add(event, id, callback, priority)
-end
-
 function hook.Remove(event, id)
 	x.ExpectString(event)
 	x.Assert(id ~= nil, "id cannot be a nil")
@@ -357,24 +343,6 @@ end, "")
 
 function hook.Run(event, ...)
 	return hook.Call(event, gmod_GetGamemode(), ...)
-end
-
-function hook.RemoveAll(event)
-	rawset(hookTable, event, {})
-
-	hookData[event] = {
-		PreCount = 0,
-		Count = 0,
-		Callbacks = {}
-	}
-
-	hookExecuteList[event] = {}
-end
-
-function hook.Count(event)
-	local callbacks = hookExecuteList[event]
-
-	return callbacks and #callbacks or 0
 end
 
 function hook.ImportFromDefaultTable()

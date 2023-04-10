@@ -1,4 +1,4 @@
-xorlib.Dependency("xorlib/hook", "sh_hooks.lua")	-- HOOK_*
+xorlib.Dependency("xorlib/hook", "sh_utils.lua")	-- hook.Once
 xorlib.Dependency("xorlib/table", "sh_remove.lua")	-- x.FilterSequence, x.RemoveSequenceValue
 
 x.PlayerGettersCache = x.PlayerGettersCache or {}

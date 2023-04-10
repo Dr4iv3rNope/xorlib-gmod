@@ -1,4 +1,4 @@
-xorlib.Dependency("xorlib/hook", "sh_hooks.lua") -- hook.Once
+xorlib.Dependency("xorlib/hook", "sh_utils.lua") -- hook.Once
 
 function x.EnsureInitialized(callback)
 	if not GAMEMODE then
