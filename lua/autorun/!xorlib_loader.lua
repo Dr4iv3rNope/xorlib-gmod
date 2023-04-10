@@ -46,23 +46,27 @@ local includers = {
 	end
 }
 
-function xorlib.IsPluginAllowed(subfolder, filename)
-	-- can be overrided to prevent loading plugins
+function xorlib.PreInclude(subfolder, filename)
+	-- can be overrided to prevent loading files
 	return true
 end
 
-local function includePlugin(subfolder, filename)
+function xorlib.IsIncluded(subfolder, filename)
+	return ignoreIncludes[subfolder .. filename]
+end
+
+local function loaderAutoInclude(subfolder, filename)
 	-- ignoring requirer
 	if filename == USE_XORLIB_FILENAME then return end
 
-	if not xorlib.IsPluginAllowed(subfolder, filename) then
+	if not xorlib.PreInclude(subfolder, filename) then
 		loaderPrint("prevent loading %s/%s", subfolder, filename)
 
 		return
 	end
 
-	-- already loaded
-	if ignoreIncludes[subfolder .. filename] then return end
+	-- already included
+	if xorlib.IsIncluded(subfolder, filename) then return end
 
 	ignoreIncludes[subfolder .. filename] = true
 
@@ -106,7 +110,7 @@ local function recursiveInclude(subfolder)
 	for _, filename in ipairs(sortByShared(files)) do
 		if filename ~= USE_XORLIB_FILENAME then
 			if filename:match(LUA_EXT_PATTERN) then
-				includePlugin(subfolder, filename)
+				loaderAutoInclude(subfolder, filename)
 			else
 				loaderPrint("unknown file type: %s/%s", subfolder, filename)
 			end
@@ -148,7 +152,7 @@ function xorlib.Dependency(subfolder, filename)
 		recursiveInclude(subfolder)
 	else
 		-- include just one file
-		includePlugin(subfolder, filename)
+		loaderAutoInclude(subfolder, filename)
 	end
 end
 
