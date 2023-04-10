@@ -6,7 +6,7 @@ local PRINT_PREFIX = CLIENT and "CLIENT" or "SERVER"
 local USE_XORLIB_FILENAME	= "!.use_xorlib.lua"
 local XORLIB_SETUP_FILENAME	= "!.xorlib_setup.lua"
 
-local ignoreIncludes -- will be set in includeAll function
+local ignoreIncludes = {}
 
 local function loaderPrint(fmt, ...)
 	print(string.format("%s: [xorlib] " .. fmt, PRINT_PREFIX, ...))
