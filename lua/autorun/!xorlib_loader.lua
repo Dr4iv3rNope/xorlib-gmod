@@ -52,7 +52,11 @@ function xorlib.PreInclude(subfolder, filename)
 end
 
 function xorlib.IsIncluded(subfolder, filename)
-	return ignoreIncludes[subfolder .. filename]
+	if filename then
+		return ignoreIncludes[subfolder .. filename] == true
+	else
+		return ignoreIncludes[subfolder] == true
+	end
 end
 
 local function loaderAutoInclude(subfolder, filename)
