@@ -154,6 +154,8 @@ function xorlib.Dependency(subfolder, filename)
 		-- include just one file
 		loaderAutoInclude(subfolder, filename)
 	end
+
+	return xorlib.IsIncluded(subfolder, filename)
 end
 
 function xorlib.IncludeAll()
