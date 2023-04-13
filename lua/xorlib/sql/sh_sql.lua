@@ -1,3 +1,6 @@
+xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
+xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Error
+
 local select		= select
 local next			= next
 local SQLStr		= SQLStr

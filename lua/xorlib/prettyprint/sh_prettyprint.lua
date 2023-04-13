@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/table", "sh_map.lua") -- x.MapSequence
+
 x.DataPrettiers = {
 	["nil"] = function()
 		return "nil"

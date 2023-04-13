@@ -1,3 +1,6 @@
+xorlib.Dependency("xorlib/networking", "sh_vaargs.lua") -- x.NetWriteVaargs
+local XORLIB_USERGROUPS = xorlib.Dependency("xorlib/player", "sh_usergroups.lua") -- x.Get*Players
+
 util.AddNetworkString("xorlib_prettyprint")
 
 function x.PrettyPrintAll(...)
@@ -18,12 +21,14 @@ function x.PrettyPrintOnly(sendTo, ...)
 	net.Send(sendTo)
 end
 
-function x.PrettyPrintAdmins(...)
-	x.PrettyPrintOnly(x.GetAdminPlayers(), ...)
-end
+if XORLIB_USERGROUPS then
+	function x.PrettyPrintAdmins(...)
+		x.PrettyPrintOnly(x.GetAdminPlayers(), ...)
+	end
 
-function x.PrettyPrintSuperAdmins(...)
-	x.PrettyPrintOnly(x.GetSuperAdminPlayers(), ...)
+	function x.PrettyPrintSuperAdmins(...)
+		x.PrettyPrintOnly(x.GetSuperAdminPlayers(), ...)
+	end
 end
 
 local PLAYER = FindMetaTable("Player")

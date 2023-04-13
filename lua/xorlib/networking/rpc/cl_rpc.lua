@@ -1,3 +1,6 @@
+xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Error
+xorlib.Dependency("xorlib/networking", "sh_vaargs.lua") -- x.NetReadVaargsUnpacked
+
 local type		= type
 local explode	= string.Explode
 

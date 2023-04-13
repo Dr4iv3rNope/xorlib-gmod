@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/networking", "sh_vaargs.lua") -- x.NetWriteVaargs
+
 util.AddNetworkString("xorlib_rpc")
 
 function x.RPCOnly(receivers, name, ...)

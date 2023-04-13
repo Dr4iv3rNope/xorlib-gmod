@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/table", "sh_filter.lua") -- x.FilterPairs
+
 x.TimeoutTable		= x.TimeoutTable or {}
 local timeoutTable	= x.TimeoutTable
 

@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
+
 local FILE = FindMetaTable("File")
 
 function FILE:WriteBoolean(bool)
@@ -118,7 +120,7 @@ end
 
 function file.OpenProtected(filename, mode, dir, onOpen)
 	local f = file.Open(filename, mode, dir)
-	assert(f, "failed to open file")
+	x.Assert(f, "failed to open file")
 
 	local success = xpcall(onOpen, x.ErrorNoHaltWithStack, f)
 

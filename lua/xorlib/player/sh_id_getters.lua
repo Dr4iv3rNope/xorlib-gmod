@@ -1,4 +1,5 @@
 xorlib.Dependency("xorlib/hook", "sh_hooks.lua") -- HOOK_*
+xorlib.Dependency("xorlib/table", "sh_enumeration.lua") -- x.EachSequence
 
 x._Old_player_GetBySteamID		= x._Old_player_GetBySteamID or player.GetBySteamID
 x._Old_player_GetBySteamID64	= x._Old_player_GetBySteamID64 or player.GetBySteamID64

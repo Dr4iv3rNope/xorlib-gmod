@@ -1,3 +1,6 @@
+xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
+xorlib.Dependency("xorlib/functional", "sh_getters.lua") -- x.Meta
+
 local select = select
 local debug_getmetatable = debug.getmetatable
 

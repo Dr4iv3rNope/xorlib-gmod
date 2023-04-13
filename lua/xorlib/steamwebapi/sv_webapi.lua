@@ -1,3 +1,8 @@
+xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
+xorlib.Dependency("xorlib/assert", "sh_types.lua") -- x.Expect*
+xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Warn
+xorlib.Dependency("xorlib/functional", "sv_binary_modules.lua") -- x.RequireModule
+
 local CHTTP = x.RequireModule("chttp") and CHTTP or HTTP
 
 x.STEAM_WEB_API_INTERFACE = x.STEAM_WEB_API_INTERFACE or {}

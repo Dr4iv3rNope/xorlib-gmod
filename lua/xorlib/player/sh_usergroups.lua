@@ -1,3 +1,4 @@
+xorlib.Dependency("xorlib/assert", "sh_assert.lua")	-- x.Assert
 xorlib.Dependency("xorlib/hook", "sh_utils.lua")	-- hook.Once
 xorlib.Dependency("xorlib/table", "sh_remove.lua")	-- x.FilterSequence, x.RemoveSequenceValue
 

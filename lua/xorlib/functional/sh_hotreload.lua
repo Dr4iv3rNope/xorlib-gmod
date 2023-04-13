@@ -1,3 +1,4 @@
+xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Print
 xorlib.Dependency("xorlib/hook", "sh_utils.lua") -- hook.Once
 
 function x.EnsureInitialized(callback)

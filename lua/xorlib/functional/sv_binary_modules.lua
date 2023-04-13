@@ -1,3 +1,6 @@
+xorlib.Dependency("xorlib/assert", "sh_types.lua") -- x.Expect*
+xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.ErrorNoHalt
+
 -- TODO: remove x.HasBinaryModule
 --
 -- util.IsBinaryModuleInstalled available on the dev branch 2022.08.12

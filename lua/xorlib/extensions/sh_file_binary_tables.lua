@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Error, x.Warn, etc.
+
 local FILE = FindMetaTable("File")
 
 local BIN_TABLE_TYPE_TABLE_BEGIN = 0

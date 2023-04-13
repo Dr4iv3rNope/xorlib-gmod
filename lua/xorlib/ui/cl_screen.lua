@@ -1,3 +1,6 @@
+xorlib.Dependency("xorlib/assert", "sh_types.lua") -- x.Expect*
+xorlib.Dependency("xorlib/functional", "sh_getters.lua") -- x.CalleePath
+
 function x.SetupScreenSize(callback, id)
 	x.ExpectFunction(callback)
 	id = x.ExpectStringOrDefault(id, x.CalleePath())

@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Error
+
 function x.ExpectType(value, expectedType)
 	local valueType = type(value)
 
