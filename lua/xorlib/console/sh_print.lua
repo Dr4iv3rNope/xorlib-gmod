@@ -1,4 +1,5 @@
 xorlib.Dependency("xorlib/functional", "sh_getters.lua") -- X.CalleePath
+xorlib.Dependency("xorlib/ui", "sh_colors.lua") -- x.Color*
 
 local string_format			= string.format
 local MsgC					= MsgC
