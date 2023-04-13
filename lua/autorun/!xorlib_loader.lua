@@ -211,8 +211,6 @@ if SERVER then
 		then
 			loaderPrint("player %s [%s] attempted to reinclude all files!", ply:Nick(), ply:SteamID())
 
-			ply:Kick("не стоит этого делать...")
-
 			return false
 		end
 
