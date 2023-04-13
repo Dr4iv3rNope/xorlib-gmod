@@ -1,3 +1,16 @@
+--
+-- There is library setup file (lua/xorlib/!.xorlib_setup.lua)
+-- which will be included BEFORE "xorlib" directory
+-- and all requirers
+--
+-- It can override xorlib.PreInclude to prevent including files
+-- even with xorlib.Dependency
+--
+-- Define ```xorlib.MANUAL_INCLUDE = true``` to prevent loading
+-- "xorlib" and all requirers. It allows to manually include
+-- every file
+--
+
 xorlib = xorlib or {}
 x = xorlib
 
@@ -167,16 +180,18 @@ function xorlib.IncludeAll()
 
 	runSetup()
 
-	recursiveInclude("xorlib")
+	if not xorlib.MANUAL_INCLUDE then
+		recursiveInclude("xorlib")
 
-	for i, dir in ipairs(findRequirers()) do
-		loaderPrint("including requirer: %s", dir)
+		for i, dir in ipairs(findRequirers()) do
+			loaderPrint("including requirer: %s", dir)
 
-		if SERVER then
-			AddCSLuaFile(string.format("%s/%s", dir, USE_XORLIB_FILENAME))
+			if SERVER then
+				AddCSLuaFile(string.format("%s/%s", dir, USE_XORLIB_FILENAME))
+			end
+
+			recursiveInclude(dir)
 		end
-
-		recursiveInclude(dir)
 	end
 end
 
