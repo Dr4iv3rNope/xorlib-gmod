@@ -1,6 +1,9 @@
 xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
 xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Error
 
+local type = type
+local IsValid = IsValid
+
 function x.ExpectType(value, expectedType)
 	local valueType = type(value)
 
