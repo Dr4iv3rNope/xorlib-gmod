@@ -1,3 +1,4 @@
+xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
 xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Error
 
 function x.ExpectType(value, expectedType)
@@ -25,7 +26,7 @@ function x.ExpectTypeOrDefault(value, expectedType, default)
 end
 
 local function implExpectOrDefault(funcName)
-	local expectFunction = assert(x[funcName], "no expect function!")
+	local expectFunction = x.Assert(x[funcName], "no expect function!")
 
 	x[funcName .. "OrDefault"] = function(value, default)
 		if value == nil then
