@@ -32,6 +32,7 @@ x.DataPrettiers = {
 	end
 }
 
+x.DataPrettiers.Weapon	= x.DataPrettiers.Entity
 x.DataPrettiers.Vehicle	= x.DataPrettiers.Entity
 x.DataPrettiers.NPC		= x.DataPrettiers.Entity
 x.DataPrettiers.NextBot	= x.DataPrettiers.Entity

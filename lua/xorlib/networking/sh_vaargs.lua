@@ -15,6 +15,7 @@ x.NetworkTypesSerializers =
 }
 
 x.NetworkTypesSerializers.Player	= x.NetworkTypesSerializers.Entity
+x.NetworkTypesSerializers.Weapon	= x.NetworkTypesSerializers.Entity
 x.NetworkTypesSerializers.Vehicle	= x.NetworkTypesSerializers.Entity
 x.NetworkTypesSerializers.NPC		= x.NetworkTypesSerializers.Entity
 x.NetworkTypesSerializers.NextBot	= x.NetworkTypesSerializers.Entity
