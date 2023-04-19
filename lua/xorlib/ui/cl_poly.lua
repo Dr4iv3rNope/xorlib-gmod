@@ -1,8 +1,11 @@
 local sin		= math.sin
 local cos		= math.cos
+local min		= math.min
 local drawPoly	= surface.DrawPoly
 local drawLine	= surface.DrawLine
-local pi2		= math.pi * 2
+local pi		= math.pi
+local pi2		= pi * 2
+local pi_2		= pi / 2
 
 function x.PolyCircle(x, y, fillPercent, segments, radius, rotation)
 	local polys			= {}
@@ -63,6 +66,173 @@ function x.PolyArc(x, y, thickness, fillPercent, segments, radius, rotation)
 	end
 
 	return polys
+end
+
+function x.PolyRotate(polys, anchorX, anchorY, rotation)
+	local sinAngle = sin(rotation)
+	local cosAngle = cos(rotation)
+
+	for i = 1, #polys do
+		local coord = polys[i]
+		local x = coord.x
+		local y = coord.y
+
+		-- https://stackoverflow.com/a/17411276
+
+		coord.x = (cosAngle * (x - anchorX)) - (sinAngle * (y - anchorY)) + anchorX
+		coord.y = (cosAngle * (y - anchorY)) + (sinAngle * (x - anchorX)) + anchorY
+	end
+
+	return polys
+end
+
+local function pushRoundedCorner(
+	polys,
+	x,
+	y,
+	inverseXOffset,
+	inverseYOffset,
+	segments,
+	rotation,
+	roundAmount
+)
+	local step = pi_2 / segments
+
+	if inverseXOffset then
+		x = x - roundAmount
+	else
+		x = x + roundAmount
+	end
+
+	if inverseYOffset then
+		y = y - roundAmount
+	else
+		y = y + roundAmount
+	end
+
+	for i = 0, segments do
+		local angle = i * step
+
+		polys[#polys + 1] = {
+			x = x + (cos(angle + rotation) * roundAmount),
+			y = y + (sin(angle + rotation) * roundAmount)
+		}
+	end
+end
+
+function x.PolyRoundedBoxEx(
+	x,
+	y,
+	w,
+	h,
+	segments,
+	ltCornerRoundPercent,	-- Left Top
+	rtCornerRoundPercent,	-- Right Top
+	lbCornerRoundPercent,	-- Left Bottom
+	rbCornerRoundPercent	-- Right Bottom
+)
+	local polys = {}
+
+	local maxRoundAmount = min(w, h) / 2
+
+	-- left top corner
+	if ltCornerRoundPercent ~= 0 then
+		pushRoundedCorner(
+			polys,
+			x,
+			y,
+			false,
+			false,
+			segments,
+			pi,
+			maxRoundAmount * ltCornerRoundPercent
+		)
+	else
+		polys[1] = {
+			x = x,
+			y = y
+		}
+	end
+
+	-- right top corner
+	if rtCornerRoundPercent ~= 0 then
+		pushRoundedCorner(
+			polys,
+			x + w,
+			y,
+			true,
+			false,
+			segments,
+			-pi_2,
+			maxRoundAmount * rtCornerRoundPercent
+		)
+	else
+		polys[#polys + 1] = {
+			x = x + w,
+			y = y
+		}
+	end
+
+	-- right bottom corner
+	if rbCornerRoundPercent ~= 0 then
+		pushRoundedCorner(
+			polys,
+			x + w,
+			y + h,
+			true,
+			true,
+			segments,
+			0,
+			maxRoundAmount * rbCornerRoundPercent
+		)
+	else
+		polys[#polys + 1] = {
+			x = x + w,
+			y = y + h
+		}
+	end
+
+	-- left bottom corner
+	if lbCornerRoundPercent ~= 0 then
+		pushRoundedCorner(
+			polys,
+			x,
+			y + h,
+			false,
+			true,
+			segments,
+			pi_2,
+			maxRoundAmount * lbCornerRoundPercent
+		)
+	else
+		polys[#polys + 1] = {
+			x = x,
+			y = y + h
+		}
+	end
+
+	return polys
+end
+
+function x.PolyRoundedBox(
+	x,
+	y,
+	w,
+	h,
+	segments,
+	cornerRoundPercent
+)
+	return x.PolyRoundedBoxEx(
+		x,
+		y,
+		w,
+		h,
+		segments,
+		cornerRoundPercent,
+		cornerRoundPercent,
+		cornerRoundPercent,
+		cornerRoundPercent
+	)
 end
 
 --
