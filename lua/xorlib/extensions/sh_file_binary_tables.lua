@@ -1,4 +1,5 @@
 xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Error, x.Warn, etc.
+xorlib.Dependency("xorlib/extensions", "sh_file.lua") -- file.OpenProtected
 
 local FILE = FindMetaTable("File")
 

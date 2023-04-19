@@ -1,9 +1,10 @@
-local USING_XORLIB_HOOKS = xorlib.Dependency("xorlib/hook", "sh_hooks.lua")
+local XORLIB_HOOKS = xorlib.Dependency("xorlib/hook", "sh_hooks.lua")
+xorlib.Dependency("xorlib/assert", "sh_types.lua") -- x.Expect*
 
 local hookRemoveAll
 local hookCount
 
-if USING_XORLIB_HOOKS then
+if XORLIB_HOOKS then
 	local hookTable			= x.HookTable
 	local hookData			= x.HookData
 	local hookExecuteList	= x.HookExecuteList

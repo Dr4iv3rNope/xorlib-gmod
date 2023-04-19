@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/ui", "cl_screen.lua") -- x.SetupScreenSize
+
 local BLUR_MATERIAL = Material("pp/blurscreen")
 
 x.SetupScreenSize(function(w, h)
