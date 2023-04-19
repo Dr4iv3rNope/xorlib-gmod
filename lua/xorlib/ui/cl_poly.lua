@@ -4,15 +4,15 @@ local drawPoly	= surface.DrawPoly
 local drawLine	= surface.DrawLine
 local pi2		= math.pi * 2
 
-function x.PolyCircle(x, y, fill, segments, radius, rotation)
-	local polygons		= {}
-	local step			= (pi2 * fill) / segments
+function x.PolyCircle(x, y, fillPercent, segments, radius, rotation)
+	local polys			= {}
+	local step			= (pi2 * fillPercent) / segments
 	local indexOffset
 
-	if fill ~= 1 then
+	if fillPercent ~= 1 then
 		indexOffset = 1
 
-		polygons[1] = {
+		polys[1] = {
 			x = x,
 			y = y
 		}
@@ -23,19 +23,19 @@ function x.PolyCircle(x, y, fill, segments, radius, rotation)
 	for i = 0, segments do
 		local angle = i * step
 
-		polygons[i + 1 + indexOffset] = {
+		polys[i + 1 + indexOffset] = {
 			x = x + (cos(angle + rotation) * radius),
 			y = y + (sin(angle + rotation) * radius)
 		}
 	end
 
-	return polygons
+	return polys
 end
 
 -- !!! use ONLY with DrawTriangleStrip* functions !!!
-function x.PolyArc(x, y, thickness, fill, segments, radius, rotation)
+function x.PolyArc(x, y, thickness, fillPercent, segments, radius, rotation)
 	local polys			= {}
-	local step			= (pi2 * fill) / segments
+	local step			= (pi2 * fillPercent) / segments
 	local innerRadius	= radius - thickness
 	local tableSize		= (segments * 2) + 2
 
