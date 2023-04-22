@@ -222,7 +222,7 @@ function x.PolyRoundedBox(
 	segments,
 	cornerRoundPercent
 )
-	return x.PolyRoundedBoxEx(
+	return xorlib.PolyRoundedBoxEx(
 		x,
 		y,
 		w,

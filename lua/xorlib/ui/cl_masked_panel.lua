@@ -17,9 +17,9 @@ function PANEL:Paint(w, h)
 	StartDrawMasked(self._CachedMask)
 
 	for _, child in ipairs(self:GetChildren()) do
-		child:SetPaintManually(true)
+		child:SetPaintedManually(true)
 		child:PaintManual()
-		child:SetPaintManually(false)
+		child:SetPaintedManually(false)
 	end
 
 	self:PaintMasked(w, h)
