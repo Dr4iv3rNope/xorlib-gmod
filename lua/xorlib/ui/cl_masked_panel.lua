@@ -16,13 +16,15 @@ end
 function PANEL:Paint(w, h)
 	StartDrawMasked(self._CachedMask)
 
+	self:PaintMasked(w, h)
+
 	for _, child in ipairs(self:GetChildren()) do
 		child:SetPaintedManually(true)
 		child:PaintManual()
 		child:SetPaintedManually(false)
 	end
 
-	self:PaintMasked(w, h)
+	self:PaintOverMasked(w, h)
 
 	EndDrawMasked()
 end
@@ -34,6 +36,10 @@ function PANEL:BuildMask(w, h)
 end
 
 function PANEL:PaintMasked(w, h)
+	-- for override
+end
+
+function PANEL:PaintOverMasked(w, h)
 	-- for override
 end
 
