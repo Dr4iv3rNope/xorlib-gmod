@@ -1,39 +1,23 @@
-local rawget		= rawget
-local rawset		= rawset
-local table_insert	= table.insert
-local table_remove	= table.remove
+local table_insert = table.insert
+local table_remove = table.remove
 
 local SET = {}
-
-function SET.__index(tbl, k)
-	return rawget(SET, k) or rawget(tbl, "Values")[k]
-end
-
-function SET.__newindex(tbl, index, value)
-	local values = rawget(tbl, "Values")
-
-	if values[index] == nil then
-		SET.Insert(tbl, value)
-	else
-		rawset(values, index, value)
-	end
-end
+SET.__index = SET
 
 function SET:Length()
-	return #rawget(self, "Values")
+	return #self.Values
 end
 
 function SET:Has(key)
-	return rawget(self, "Keys")[key] ~= nil
+	return self.Keys[key] ~= nil
 end
 
 function SET:Insert(a, b)
-	local keys, values = rawget(self, "Keys"), rawget(self, "Values")
-	local length = #values
+	local keys, values = self.Keys, self.Values
 	local pos, value
 
 	if b == nil then
-		pos = length + 1
+		pos = #values + 1
 		value = a
 	else
 		pos = a
@@ -63,7 +47,7 @@ function SET:Insert(a, b)
 end
 
 function SET:Remove(pos)
-	local keys, values = rawget(self, "Keys"), rawget(self, "Values")
+	local keys, values = self.Keys, self.Values
 
 	local value = values[pos]
 	if value == nil then return end
@@ -77,7 +61,7 @@ function SET:Remove(pos)
 end
 
 function SET:Delete(key)
-	local keys, values = rawget(self, "Keys"), rawget(self, "Values")
+	local keys, values = self.Keys, self.Values
 
 	local index = keys[key]
 	if index == nil then return end
@@ -89,7 +73,7 @@ function SET:Delete(key)
 end
 
 function SET:Reconstruct(from)
-	local keys, values = rawget(self, "Keys"), rawget(self, "Values")
+	local keys, values = self.Keys, self.Values
 
 	for i = from, #values do
 		local v = values[i]
