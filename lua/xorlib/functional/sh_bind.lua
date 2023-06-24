@@ -2,13 +2,13 @@ xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
 xorlib.Dependency("xorlib/functional", "sh_getters.lua") -- x.Meta
 
 local select = select
-local debug_getmetatable = debug.getmetatable
+local getmetatable = getmetatable
 
 local PLACEHOLDER = {}
 
 do
 	local function createPlaceholder(index)
-		debug.setmetatable(index, PLACEHOLDER)
+		setmetatable({ Index = index }, PLACEHOLDER)
 
 		return index
 	end
@@ -575,8 +575,8 @@ function x.Bind(f, ...)
 		local oModifyArguments = modifyArguments
 		local arg = select(i, ...)
 
-		if debug_getmetatable(arg) == PLACEHOLDER then
-			local swap = swapArguments[arg][i]
+		if getmetatable(arg) == PLACEHOLDER then
+			local swap = swapArguments[arg.Index][i]
 
 			modifyArguments = function(
 				oa1, oa2, oa3, oa4, oa5, oa6, oa7, oa8, oa9,
