@@ -85,12 +85,16 @@ local function loaderAutoInclude(subfolder, filename)
 	-- already included
 	if xorlib.IsIncluded(subfolder, filename) then return end
 
-	ignoreIncludes[subfolder .. filename] = true
-
 	local prefix = filename:sub(1, 3)
 	local path = string.format("%s/%s", subfolder, filename)
-	local includer = includers[prefix] or includers["sv_"]
 
+	if not file.Exists(path, "LUA") then
+		return
+	end
+
+	ignoreIncludes[subfolder .. filename] = true
+
+	local includer = includers[prefix] or includers["sv_"]
 	includer(path)
 end
 
