@@ -8,9 +8,7 @@ local PLACEHOLDER = {}
 
 do
 	local function createPlaceholder(index)
-		setmetatable({ Index = index }, PLACEHOLDER)
-
-		return index
+		return setmetatable({ Index = index }, PLACEHOLDER)
 	end
 
 	x._1 = createPlaceholder(1)
