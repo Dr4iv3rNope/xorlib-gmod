@@ -1,25 +1,27 @@
-xorlib.Dependency("xorlib/networking", "sh_vaargs.lua") -- x.NetWriteVaargs
+xorlib.Dependency("xorlib/networking/rpc", "sv_network.lua")
+xorlib.Dependency("xorlib/networking/rpc", "sv_registry.lua")
 
-util.AddNetworkString("xorlib_rpc")
+function x.RPCOnly(receivers, functionPath, ...)
+	x.RPCEnsureRegistered(functionPath)
 
-function x.RPCOnly(receivers, name, ...)
 	net.Start("xorlib_rpc")
-	net.WriteString(name)
-	x.NetWriteVaargs(...)
+	x.NetWriteRPC(functionPath, ...)
 	net.Send(receivers)
 end
 
-function x.RPCOmit(exclude, name, ...)
+function x.RPCOmit(exclude, functionPath, ...)
+	x.RPCEnsureRegistered(functionPath)
+
 	net.Start("xorlib_rpc")
-	net.WriteString(name)
-	x.NetWriteVaargs(...)
+	x.NetWriteRPC(functionPath, ...)
 	net.Omit(exclude)
 end
 
-function x.RPCAll(name, ...)
+function x.RPCAll(functionPath, ...)
+	x.RPCEnsureRegistered(functionPath)
+
 	net.Start("xorlib_rpc")
-	net.WriteString(name)
-	x.NetWriteVaargs(...)
+	x.NetWriteRPC(functionPath, ...)
 	net.Broadcast()
 end
 
