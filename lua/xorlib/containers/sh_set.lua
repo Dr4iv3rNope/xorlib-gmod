@@ -12,6 +12,10 @@ function SET:Has(key)
 	return self.Keys[key] ~= nil
 end
 
+function SET:Index(value)
+	return self.Keys[value]
+end
+
 function SET:Insert(a, b)
 	local keys, values = self.Keys, self.Values
 	local pos, value
