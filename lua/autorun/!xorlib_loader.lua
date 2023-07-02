@@ -18,6 +18,7 @@ local PRINT_PREFIX = CLIENT and "CLIENT" or "SERVER"
 
 local USE_XORLIB_FILENAME	= "!.use_xorlib.lua"
 local XORLIB_SETUP_FILENAME	= "!.xorlib_setup.lua"
+local LUA_EXT_PATTERN = "%.lua$"
 
 local ignoreIncludes = {}
 
@@ -25,85 +26,12 @@ local function loaderPrint(fmt, ...)
 	print(string.format("%s: [xorlib] " .. fmt, PRINT_PREFIX, ...))
 end
 
-local function loaderInclude(path)
-	loaderPrint("including %s", path)
-
-	include(path)
-end
-
-local includers = {
-	["cl_"] = function(path)
-		if SERVER then
-			loaderPrint("including client %s", path)
-
-			AddCSLuaFile(path)
-		end
-
-		if CLIENT then
-			loaderInclude(path)
-		end
-	end,
-
-	["sh_"] = function(path)
-		if SERVER then
-			AddCSLuaFile(path)
-		end
-
-		loaderInclude(path)
-	end,
-
-	["sv_"] = function(path)
-		if SERVER then
-			loaderInclude(path)
-		end
-	end
-}
-
-function xorlib.PreInclude(subfolder, filename)
-	-- can be overrided to prevent loading files
-	return true
-end
-
-function xorlib.IsIncluded(subfolder, filename)
-	if filename then
-		return ignoreIncludes[subfolder .. filename] == true
-	else
-		return ignoreIncludes[subfolder] == true
-	end
-end
-
-local function loaderAutoInclude(subfolder, filename)
-	-- ignoring requirer
-	if filename == USE_XORLIB_FILENAME then return end
-
-	if not xorlib.PreInclude(subfolder, filename) then
-		loaderPrint("prevent loading %s/%s", subfolder, filename)
-
-		return
-	end
-
-	-- already included
-	if xorlib.IsIncluded(subfolder, filename) then return end
-
-	local prefix = filename:sub(1, 3)
-	local path = string.format("%s/%s", subfolder, filename)
-
-	if not file.Exists(path, "LUA") then
-		return
-	end
-
-	ignoreIncludes[subfolder .. filename] = true
-
-	local includer = includers[prefix] or includers["sv_"]
-	includer(path)
-end
-
 local function sortByShared(files)
 	local SHARED_LUA_FILE_PATTERN = "^sh_.+%.lua$"
 
 	table.sort(files, function(a, b)
-		local aIsShared = a:match(SHARED_LUA_FILE_PATTERN) ~= nil
-		local bIsShared = b:match(SHARED_LUA_FILE_PATTERN) ~= nil
+		local aIsShared = string.match(a, SHARED_LUA_FILE_PATTERN) ~= nil
+		local bIsShared = string.match(b, SHARED_LUA_FILE_PATTERN) ~= nil
 
 		if aIsShared and bIsShared then return false end
 		if aIsShared then return true end
@@ -114,87 +42,192 @@ local function sortByShared(files)
 	return files
 end
 
-local function recursiveInclude(subfolder)
-	-- already loaded
-	if ignoreIncludes[subfolder] then return end
+local function loaderInclude(path)
+	loaderPrint("including %s", path)
 
-	ignoreIncludes[subfolder] = true
+	include(path)
+end
 
-	local files, dirs = file.Find(string.format("%s/*", subfolder), "LUA")
+function xorlib.SharedIncluder(path)
+	if SERVER then
+		loaderPrint("including shared %s", path)
 
-	if not files or not dirs then
-		return loaderPrint("subpath %s is invalid", subfolder)
+		AddCSLuaFile(path)
 	end
 
-	local LUA_EXT_PATTERN = "%.lua$"
+	loaderInclude(path)
+end
+
+function xorlib.ServerIncluder(path)
+	if SERVER then
+		loaderPrint("including server %s", path)
+
+		loaderInclude(path)
+	end
+end
+
+function xorlib.ClientIncluder(path)
+	if SERVER then
+		loaderPrint("including client %s", path)
+
+		AddCSLuaFile(path)
+	end
+
+	if CLIENT then
+		loaderInclude(path)
+	end
+end
+
+function xorlib.AutoIncluder(path)
+	local filename = string.GetFileFromFilename(path)
+	local includer = xorlib.FindMatchingIncluder(filename)
+
+	if not includer then
+		return
+	end
+
+	includer(path)
+end
+
+xorlib.MatchingIncluders = {
+	{ Match = "^sh_", Includer = xorlib.SharedIncluder },
+	{ Match = "_sh%.lua$", Includer = xorlib.SharedIncluder },
+
+	{ Match = "^cl_", Includer = xorlib.ClientIncluder },
+	{ Match = "_cl%.lua$", Includer = xorlib.ClientIncluder },
+
+	{ Match = "^sv_", Includer = xorlib.ServerIncluder },
+	{ Match = "_sv%.lua$", Includer = xorlib.ServerIncluder },
+}
+
+function xorlib.FindMatchingIncluder(filename)
+	for i, config in ipairs(xorlib.MatchingIncluders) do
+		if string.match(filename, config.Match) then
+			return config.Includer
+		end
+	end
+
+	return nil
+end
+
+function xorlib.IsIncluded(subpath, filename)
+	if filename then
+		return ignoreIncludes[subpath .. filename] == true
+	else
+		return ignoreIncludes[subpath] == true
+	end
+end
+
+function xorlib.IncludeFile(includer, subpath, filename)
+	-- ignoring requirer
+	if filename == USE_XORLIB_FILENAME then return end
+
+	if not xorlib.PreInclude(subpath, filename) then
+		loaderPrint("prevent loading %s/%s", subpath, filename)
+
+		return
+	end
+
+	-- already included
+	if xorlib.IsIncluded(subpath, filename) then return end
+
+	local path = string.format("%s/%s", subpath, filename)
+
+	if not file.Exists(path, "LUA") then
+		return
+	end
+
+	ignoreIncludes[subpath .. filename] = true
+
+	includer(path)
+end
+
+function xorlib.RecursiveInclude(includer, subpath)
+	-- already loaded
+	if ignoreIncludes[subpath] then return end
+
+	ignoreIncludes[subpath] = true
+
+	local files, dirs = file.Find(string.format("%s/*", subpath), "LUA")
+
+	if not files or not dirs then
+		return loaderPrint("subpath %s is invalid", subpath)
+	end
 
 	for _, filename in ipairs(sortByShared(files)) do
-		if filename ~= USE_XORLIB_FILENAME then
-			if filename:match(LUA_EXT_PATTERN) then
-				loaderAutoInclude(subfolder, filename)
-			else
-				loaderPrint("unknown file type: %s/%s", subfolder, filename)
-			end
+		if
+			filename ~= USE_XORLIB_FILENAME and
+			string.match(filename, LUA_EXT_PATTERN)
+		then
+			xorlib.IncludeFile(includer, subpath, filename)
 		end
 	end
 
 	for _, dir in ipairs(dirs) do
-		recursiveInclude(subfolder .. "/" .. dir)
+		xorlib.RecursiveInclude(includer, subpath .. "/" .. dir)
 	end
 end
 
-local function runSetup()
-	local setupFilepath = "xorlib/" .. XORLIB_SETUP_FILENAME
-
-	if file.Exists(setupFilepath, "LUA") then
-		includers["sh_"](setupFilepath)
+function xorlib.Dependency(subpath, filename)
+	if not filename then
+		-- include whole directory
+		xorlib.RecursiveInclude(xorlib.AutoIncluder, subpath)
+	else
+		-- include just one file
+		xorlib.IncludeFile(xorlib.AutoIncluder, subpath, filename)
 	end
+
+	return xorlib.IsIncluded(subpath, filename)
 end
 
-local function findRequirers()
-	local requirers = {}
+function xorlib.PreInclude(subpath, filename)
+	-- can be overrided to prevent loading files
+	return true
+end
 
-	do
-		local _, dirs = file.Find("*", "LUA")
+-- xorlib.IncludeAll
+do
+	local function runSetup()
+		local setupFilepath = "xorlib/" .. XORLIB_SETUP_FILENAME
 
-		for i, dir in ipairs(dirs) do
-			if file.Exists(string.format("%s/%s", dir, USE_XORLIB_FILENAME), "LUA") then
-				table.insert(requirers, dir)
-			end
+		if file.Exists(setupFilepath, "LUA") then
+			xorlib.SharedIncluder(setupFilepath)
 		end
 	end
 
-	return requirers
-end
+	local function findRequirers()
+		local requirers = {}
 
-function xorlib.Dependency(subfolder, filename)
-	if not filename then
-		-- include whole directory
-		recursiveInclude(subfolder)
-	else
-		-- include just one file
-		loaderAutoInclude(subfolder, filename)
+		do
+			local _, dirs = file.Find("*", "LUA")
+
+			for i, dir in ipairs(dirs) do
+				if file.Exists(string.format("%s/%s", dir, USE_XORLIB_FILENAME), "LUA") then
+					table.insert(requirers, dir)
+				end
+			end
+		end
+
+		return requirers
 	end
 
-	return xorlib.IsIncluded(subfolder, filename)
-end
+	function xorlib.IncludeAll()
+		ignoreIncludes = {}
 
-function xorlib.IncludeAll()
-	ignoreIncludes = {}
+		runSetup()
 
-	runSetup()
+		if not xorlib.MANUAL_INCLUDE then
+			xorlib.RecursiveInclude(xorlib.AutoIncluder, "xorlib")
 
-	if not xorlib.MANUAL_INCLUDE then
-		recursiveInclude("xorlib")
+			for i, dir in ipairs(findRequirers()) do
+				loaderPrint("including requirer: %s", dir)
 
-		for i, dir in ipairs(findRequirers()) do
-			loaderPrint("including requirer: %s", dir)
+				if SERVER then
+					AddCSLuaFile(string.format("%s/%s", dir, USE_XORLIB_FILENAME))
+				end
 
-			if SERVER then
-				AddCSLuaFile(string.format("%s/%s", dir, USE_XORLIB_FILENAME))
+				xorlib.RecursiveInclude(xorlib.AutoIncluder, dir)
 			end
-
-			recursiveInclude(dir)
 		end
 	end
 end
