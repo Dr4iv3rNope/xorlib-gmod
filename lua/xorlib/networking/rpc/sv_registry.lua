@@ -21,7 +21,7 @@ function x.RPCEnsureRegistered(functionPath)
 end
 
 function x.RPCSendRegistered(target)
-	for index, functionPath in ipairs(x.RPCRegistry.Keys) do
+	for index, functionPath in ipairs(x.RPCRegistry.Values) do
 		net.Start("xorlib_rpc_register")
 		x.NetWriteRPCRegister(functionPath, index)
 		net.Send(target)
