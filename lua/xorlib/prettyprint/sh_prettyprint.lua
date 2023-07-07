@@ -42,7 +42,7 @@ x.DataPrettiers.NextBot	= x.DataPrettiers.Entity
 function x.PrettyValue(v)
 	local prettier = x.DataPrettiers[type(v)]
 
-	return prettier(v)
+	return prettier and prettier(v) or v
 end
 
 function x.PrettySequence(tbl)
