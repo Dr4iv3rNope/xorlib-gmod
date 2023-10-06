@@ -1,3 +1,10 @@
+xorlib.Dependency("xorlib/assert",     "sh_assert.lua")
+xorlib.Dependency("xorlib/console",    "sh_print.lua")
+xorlib.Dependency("xorlib/functional", "sh_bind.lua")
+xorlib.Dependency("xorlib/table",      "sh_enumeration.lua")
+xorlib.Dependency("xorlib/networking", "sh_vaargs.lua")
+xorlib.Dependency("xorlib/language",   "sh_language.lua")
+
 xorlib.LANGUAGE_CONTEXT         = xorlib.LANGUAGE_CONTEXT or {}
 xorlib.LANGUAGE_CONTEXT.__index = xorlib.LANGUAGE_CONTEXT
 
