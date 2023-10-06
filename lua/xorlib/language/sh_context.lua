@@ -85,6 +85,17 @@ function xorlib.LANGUAGE_CONTEXT:NetReadPhrase(disallowExtended)
     end
 end
 
+function xorlib.LANGUAGE_CONTEXT:IndexPhrases()
+    local index = 0
+
+    for phraseID, _ in SortedPairs(self.RequiredPhrases) do
+        self.RequiredPhrases[phraseID] = index
+        self.IndexedPhrases[index]     = phraseID
+
+        index = index + 1
+    end
+end
+
 function xorlib.LANGUAGE_CONTEXT:ValidateLanguage(language)
 	for phraseID, _ in pairs(self.RequiredPhrases) do
 		if not language.Phrases[phraseID] then
