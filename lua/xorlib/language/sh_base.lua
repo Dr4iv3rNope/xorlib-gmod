@@ -3,6 +3,7 @@ xorlib.Dependency("xorlib/table",      "sh_enumeration.lua")
 
 xorlib.Dependency("xorlib/language",   "sh_context.lua")
 xorlib.Dependency("xorlib/language",   "sh_language.lua")
+xorlib.Dependency("xorlib/language",   "sh_fallback_language.lua")
 
 function xorlib.IndexAllLanguageContextsPhrases()
     x.EachValue(xorlib.LanguageContextList, xorlib.LANGUAGE_CONTEXT.IndexPhrases)
