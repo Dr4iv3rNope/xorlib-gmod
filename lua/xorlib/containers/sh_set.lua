@@ -1,7 +1,9 @@
 local table_insert = table.insert
 local table_remove = table.remove
 
-local SET = {}
+xorlib.SET = xorlib.SET or {}
+
+local SET = xorlib.SET
 SET.__index = SET
 
 function SET:Length()
