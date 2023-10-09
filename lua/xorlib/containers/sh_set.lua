@@ -86,7 +86,7 @@ function SET:Reconstruct(from)
 	end
 end
 
-function x.SetFromSequential(tbl)
+function x.SetFromSequence(tbl)
 	local list = setmetatable({
 		Keys = {},
 		Values = tbl
@@ -96,6 +96,9 @@ function x.SetFromSequential(tbl)
 
 	return list
 end
+
+-- TODO: legacy fallback. remove me!
+x.SetFromSequential = x.SetFromSequence
 
 function x.Set()
 	return setmetatable({
