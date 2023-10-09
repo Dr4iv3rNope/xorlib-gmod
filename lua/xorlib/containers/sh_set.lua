@@ -97,19 +97,6 @@ function x.SetFromSequential(tbl)
 	return list
 end
 
-function x.SetFromKeys(tbl)
-	local keys, values = {}, {}
-
-	for k, v in pairs(tbl) do
-		keys[k] = table_insert(values, v)
-	end
-
-	return setmetatable({
-		Keys = keys,
-		Values = values
-	}, SET)
-end
-
 function x.Set()
 	return setmetatable({
 		Keys = {},
