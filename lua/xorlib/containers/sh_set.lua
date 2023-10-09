@@ -51,7 +51,7 @@ function SET:Insert(a, b)
 		if index ~= pos then
 			-- if index is different, move value
 
-			self:Remove(index)
+			value[index] = nil
 		else
 			-- if insert index is same, override value
 			values[index] = value
