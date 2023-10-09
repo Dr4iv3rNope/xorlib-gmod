@@ -16,6 +16,23 @@ function SET:Index(value)
 	return self.Keys[value]
 end
 
+function SET:BulkEdit()
+	if self._BulkEdit then return end
+
+	self._BulkEdit = true
+	self._BulkReconstructFromIndex = #self.Values + 1
+end
+
+function SET:CommitBulkEdit()
+	if not self._BulkEdit then return end
+
+	self._BulkEdit = nil
+
+	self:Reconstruct(self._BulkReconstructFromIndex)
+
+	self._BulkReconstructFromIndex = nil
+end
+
 function SET:Insert(a, b)
 	local keys, values = self.Keys, self.Values
 	local pos, value
@@ -77,6 +94,14 @@ function SET:Delete(key)
 end
 
 function SET:Reconstruct(from)
+	if self._BulkEdit then
+		if self._BulkReconstructFromIndex > from then
+			self._BulkReconstructFromIndex = from
+		end
+
+		return
+	end
+
 	local keys, values = self.Keys, self.Values
 
 	for i = from, #values do
