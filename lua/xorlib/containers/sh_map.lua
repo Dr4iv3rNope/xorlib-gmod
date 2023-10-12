@@ -1,5 +1,6 @@
 local table_insert = table.insert
 local table_remove = table.remove
+local next         = next
 
 xorlib.MAP = xorlib.MAP or {}
 
@@ -49,6 +50,27 @@ function MAP:Delete(key)
     indicies[key] = nil
 
     return value
+end
+
+function MAP:Iterate()
+    local indicies = self.Indicies
+    local values   = self.Values
+
+    local prevKey = nil
+
+    return function()
+        local key, index = next(indicies, prevKey)
+
+        if key == nil then
+            return nil -- end of iteration
+        end
+
+        prevKey = key
+
+        local value = values[index]
+
+        return key, value
+    end
 end
 
 function x.MapFromPairs(tbl)
