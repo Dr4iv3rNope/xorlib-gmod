@@ -1,26 +1,27 @@
 xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Error
 
 local allowedParseResult = {
-	["table"] = true,
-	["function"] = true
+    ["table"]    = true,
+    ["function"] = true
 }
 
 function x.RPCFindFunction(functionPath)
-	local keys = string.Explode(".", functionPath)
-	local outputFunction = _G
+    local keys = string.Explode(".", functionPath)
+    local outputFunction = _G
 
-	for i = 1, #keys do
-		if type(outputFunction) ~= "table" then
-			x.Error("table expected. Last index is %s", keys[i - 1])
-		end
+    for i = 1, #keys do
+        x.Assert(type(outputFunction) == "table",
+                 "table expected. Last index is %s",
+                 keys[i - 1])
 
-		local key = keys[i]
-		outputFunction = outputFunction[key]
+        local key = keys[i]
 
-		if not allowedParseResult[type(outputFunction)] then
-			x.Error("table or function expected. Index: %s", key)
-		end
-	end
+        outputFunction = outputFunction[key]
 
-	return outputFunction
+        x.Assert(allowedParseResult[type(outputFunction)],
+                 "table or function expected. Index: %s",
+                 key)
+    end
+
+    return outputFunction
 end

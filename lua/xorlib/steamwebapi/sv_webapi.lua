@@ -1,6 +1,6 @@
-xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
-xorlib.Dependency("xorlib/assert", "sh_types.lua") -- x.Expect*
-xorlib.Dependency("xorlib/console", "sh_print.lua") -- x.Warn
+xorlib.Dependency("xorlib/assert",     "sh_assert.lua")         -- x.Assert
+xorlib.Dependency("xorlib/assert",     "sh_types.lua")          -- x.Expect*
+xorlib.Dependency("xorlib/console",    "sh_print.lua")          -- x.Warn
 xorlib.Dependency("xorlib/functional", "sv_binary_modules.lua") -- x.RequireModule
 
 local CHTTP = x.RequireModule("chttp") and CHTTP or HTTP
@@ -9,70 +9,64 @@ x.STEAM_WEB_API_INTERFACE = x.STEAM_WEB_API_INTERFACE or {}
 x.STEAM_WEB_API_INTERFACE.__index = x.STEAM_WEB_API_INTERFACE
 
 function x.STEAM_WEB_API_INTERFACE:Request(interface, method, version, query, callback)
-	x.ExpectString(interface)
-	x.ExpectString(method)
-	x.ExpectNumber(version)
-	x.ExpectTableOrDefault(query, {})
-	x.ExpectFunctionOrDefault(callback)
+    x.ExpectString(interface)
+    x.ExpectString(method)
+    x.ExpectNumber(version)
+    x.ExpectTableOrDefault(query, {})
+    x.ExpectFunctionOrDefault(callback)
 
-	query.key = self.Key
+    query.key = self.Key
 
-	CHTTP({
-		url = string.format(
-			"https://api.steampowered.com/%s/%s/v%04d",
-			interface,
-			method,
-			version
-		),
+    CHTTP({
+        url = string.format("https://api.steampowered.com/%s/%s/v%04d",
+                            interface,
+                            method,
+                            version),
 
-		parameters = query,
+        parameters = query,
 
-		success = function(code, body)
-			local validationError
-			local json = util.JSONToTable(body)
+        success = function(code, body)
+            local validationError
+            local json = util.JSONToTable(body)
 
-			if json and json.response then
-				json = json.response
-			else
-				x.Warn(
-					"[Steam Web API] Request %s/%s/%04d was success (%d), but no \"response\" key is available:\nBody: %s",
-					interface,
-					method,
-					version,
-					code,
-					body
-				)
+            if json and json.response then
+                json = json.response
+            else
+                x.Warn("[Steam Web API] Request %s/%s/%04d was success (%d), but no \"response\" key is available:\nBody: %s",
+                       interface,
+                       method,
+                       version,
+                       code,
+                       body)
 
-				validationError = "No \"response\" key"
-				json = nil
-			end
+                validationError = "No \"response\" key"
+                json = nil
+            end
 
-			if callback then
-				callback(validationError, json)
-			end
-		end,
+            if callback then
+                callback(validationError, json)
+            end
+        end,
 
-		failed = function(err)
-			x.Warn(
-				"[Steam Web API] Request %s/%s/%04d failed: %s",
-				interface,
-				method,
-				version,
-				err
-			)
+        failed = function(err)
+            x.Warn("[Steam Web API] Request %s/%s/%04d failed: %s",
+                   interface,
+                   method,
+                   version,
+                   err)
 
-			if callback then
-				callback(err)
-			end
-		end
-	})
+            if callback then
+                callback(err)
+            end
+        end
+    })
 end
 
 function x.SteamWebApiInterface(key)
-	key = x.ExpectStringOrDefault(key, x._SteamWebApiKey)
-	x.Assert(key, "No steam web api key available!")
+    key = x.ExpectStringOrDefault(key, x._SteamWebApiKey)
+    x.Assert(key, "No steam web api key available!")
 
-	return setmetatable({
-		Key = key
-	}, x.STEAM_WEB_API_INTERFACE)
+    return setmetatable({
+        Key = key
+    }, x.STEAM_WEB_API_INTERFACE)
 end

@@ -11,25 +11,30 @@ local MaskedPanel = baseclass.Get("MaskedPanel")
 local PANEL = {}
 
 function PANEL:Init()
-	MaskedPanel.Init(self)
+    MaskedPanel.Init(self)
 
-	self._Avatar = vgui.Create("AvatarImage", self)
+    self._Avatar = vgui.Create("AvatarImage", self)
 end
 
 function PANEL:BuildMask(w, h)
-	return x.PolyCircle(w / 2, h / 2, 1, 32, w / 2, 0)
+    return x.PolyCircle(w / 2,
+                        h / 2,
+                        1,
+                        32,
+                        w / 2,
+                        0)
 end
 
 function PANEL:PerformLayout(w, h)
-	self.Avatar:SetSize(w, h)
+    self.Avatar:SetSize(w, h)
 end
 
 local function alias(funcName)
-	PANEL[funcName] = function(self, ...)
-		local avatarFunc = self.Avatar[funcName]
+    PANEL[funcName] = function(self, ...)
+        local avatarFunc = self.Avatar[funcName]
 
-		return avatarFunc(self.Avatar, ...)
-	end
+        return avatarFunc(self.Avatar, ...)
+    end
 end
 
 alias("SetPlayer")

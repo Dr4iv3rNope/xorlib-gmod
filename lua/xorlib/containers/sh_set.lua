@@ -7,129 +7,134 @@ local SET = xorlib.SET
 SET.__index = SET
 
 function SET:Length()
-	return #self.Values
+    return #self.Values
 end
 
 function SET:Has(key)
-	return self.Keys[key] ~= nil
+    return self.Keys[key] ~= nil
 end
 
 function SET:Index(value)
-	return self.Keys[value]
+    return self.Keys[value]
 end
 
 function SET:BulkEdit()
-	if self._BulkEdit then return end
+    if self._BulkEdit then return end
 
-	self._BulkEdit = true
-	self._BulkReconstructFromIndex = #self.Values + 1
+    self._BulkEdit = true
+    self._BulkReconstructFromIndex = #self.Values + 1
 end
 
 function SET:CommitBulkEdit()
-	if not self._BulkEdit then return end
+    if not self._BulkEdit then return end
 
-	self._BulkEdit = nil
+    self._BulkEdit = nil
 
-	self:Reconstruct(self._BulkReconstructFromIndex)
+    self:Reconstruct(self._BulkReconstructFromIndex)
 
-	self._BulkReconstructFromIndex = nil
+    self._BulkReconstructFromIndex = nil
 end
 
 function SET:Insert(a, b)
-	local keys, values = self.Keys, self.Values
-	local pos, value
+    local keys   = self.Keys
+    local values = self.Values
 
-	if b == nil then
-		pos = #values + 1
-		value = a
-	else
-		pos = a
-		value = b
-	end
+    local pos, value
 
-	local index = keys[value]
+    if b == nil then
+        pos   = #values + 1
+        value = a
+    else
+        pos   = a
+        value = b
+    end
 
-	if index ~= nil then
-		if index ~= pos then
-			-- if index is different, move value
+    local index = keys[value]
 
-			value[index] = nil
-		else
-			-- if insert index is same, override value
-			values[index] = value
+    if index ~= nil then
+        if index ~= pos then
+            -- if index is different, move value
 
-			return pos
-		end
-	end
+            value[index] = nil
+        else
+            -- if insert index is same, override value
+            values[index] = value
 
-	keys[value] = table_insert(values, pos, value)
+            return pos
+        end
+    end
 
-	self:Reconstruct(pos + 1)
+    keys[value] = table_insert(values, pos, value)
 
-	return pos
+    self:Reconstruct(pos + 1)
+
+    return pos
 end
 
 function SET:Remove(pos)
-	local keys, values = self.Keys, self.Values
+    local keys   = self.Keys
+    local values = self.Values
 
-	local value = values[pos]
-	if value == nil then return end
+    local value = values[pos]
+    if value == nil then return end
 
-	table_remove(values, pos)
-	keys[value] = nil
+    table_remove(values, pos)
+    keys[value] = nil
 
-	self:Reconstruct(pos)
+    self:Reconstruct(pos)
 
-	return value
+    return value
 end
 
 function SET:Delete(key)
-	local keys, values = self.Keys, self.Values
+    local keys   = self.Keys
+    local values = self.Values
 
-	local index = keys[key]
-	if index == nil then return end
+    local index = keys[key]
+    if index == nil then return end
 
-	table_remove(values, index)
-	keys[key] = nil
+    table_remove(values, index)
+    keys[key] = nil
 
-	self:Reconstruct(index)
+    self:Reconstruct(index)
 end
 
 function SET:Reconstruct(from)
-	if self._BulkEdit then
-		if self._BulkReconstructFromIndex > from then
-			self._BulkReconstructFromIndex = from
-		end
+    if self._BulkEdit then
+        if self._BulkReconstructFromIndex > from then
+            self._BulkReconstructFromIndex = from
+        end
 
-		return
-	end
+        return
+    end
 
-	local keys, values = self.Keys, self.Values
+    local keys   = self.Keys
+    local values = self.Values
 
-	for i = from, #values do
-		local v = values[i]
+    for i = from, #values do
+        local v = values[i]
 
-		keys[v] = i
-	end
+        keys[v] = i
+    end
 end
 
 function x.SetFromSequence(tbl)
-	local list = setmetatable({
-		Keys = {},
-		Values = tbl
-	}, SET)
+    local list = setmetatable({
+        Keys = {},
+        Values = tbl
+    }, SET)
 
-	list:Reconstruct(1)
+    list:Reconstruct(1)
 
-	return list
+    return list
 end
 
 -- TODO: legacy fallback. remove me!
 x.SetFromSequential = x.SetFromSequence
 
 function x.Set()
-	return setmetatable({
-		Keys = {},
-		Values = {}
-	}, SET)
+    return setmetatable({
+        Keys = {},
+        Values = {}
+    }, SET)
 end

@@ -1,67 +1,67 @@
 local pairs = pairs
 
 function x.MapSequence(tbl, callback)
-	for i = 1, #tbl do
-		local newValue = callback(tbl[i])
+    for i = 1, #tbl do
+        local newValue = callback(tbl[i])
 
-		if newValue ~= nil then
-			tbl[i] = newValue
-		end
-	end
+        if newValue ~= nil then
+            tbl[i] = newValue
+        end
+    end
 
-	return tbl
+    return tbl
 end
 
 function x.MapCopySequence(tbl, callback)
-	local newTable = {}
+    local newTable = {}
 
-	for i = 1, #tbl do
-		local v = tbl[i]
-		local newValue = callback(v)
+    for i = 1, #tbl do
+        local v = tbl[i]
+        local newValue = callback(v)
 
-		if newValue ~= nil then
-			newTable[i] = newValue
-		else
-			newTable[i] = v
-		end
-	end
+        if newValue ~= nil then
+            newTable[i] = newValue
+        else
+            newTable[i] = v
+        end
+    end
 
-	return newTable
+    return newTable
 end
 
 function x.MapPairs(tbl, callback)
-	for k, v in pairs(tbl) do
-		local newValue, newKey = callback(v, k)
+    for k, v in pairs(tbl) do
+        local newValue, newKey = callback(v, k)
 
-		if newValue ~= nil then
-			if newKey ~= nil then
-				tbl[k] = nil
-				tbl[newKey] = newValue
-			else
-				tbl[k] = newValue
-			end
-		end
-	end
+        if newValue ~= nil then
+            if newKey ~= nil then
+                tbl[k] = nil
+                tbl[newKey] = newValue
+            else
+                tbl[k] = newValue
+            end
+        end
+    end
 
-	return tbl
+    return tbl
 end
 
 function x.MapCopyPairs(tbl, callback)
-	local newTable = {}
+    local newTable = {}
 
-	for k, v in pairs(tbl) do
-		local newValue, newKey = callback(v, k)
+    for k, v in pairs(tbl) do
+        local newValue, newKey = callback(v, k)
 
-		if newValue ~= nil then
-			if newKey ~= nil then
-				newTable[newKey] = newValue
-			else
-				newTable[k] = newValue
-			end
-		else
-			newTable[k] = v
-		end
-	end
+        if newValue ~= nil then
+            if newKey ~= nil then
+                newTable[newKey] = newValue
+            else
+                newTable[k] = newValue
+            end
+        else
+            newTable[k] = v
+        end
+    end
 
-	return newTable
+    return newTable
 end
