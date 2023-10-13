@@ -41,7 +41,7 @@ end
 function xorlib.LANGUAGE_CONTEXT:DefineLanguage(languageName)
     local language = xorlib.Language(languageName)
 
-    xorlib.LANGUAGE[languageName] = language
+    self.AvailableLanguages[languageName] = language
 
     return language
 end
