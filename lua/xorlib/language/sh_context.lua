@@ -35,6 +35,8 @@ function xorlib.LANGUAGE_CONTEXT:ChangeLanguage(newLanguageName)
         return
     end
 
+    self.ActiveLanguage = newLanguage
+
     self:OnLanguageChanged(newLanguage, oldLanguage)
 end
 
