@@ -1,4 +1,13 @@
-local floor = math.floor
+xorlib.Dependency("xorlib/language")
+
+local floor           = math.floor
+local languageContext = x.XorlibLanguageContext
+
+languageContext:DefineLanguagePhrase("time_formatter.seconds")
+languageContext:DefineLanguagePhrase("time_formatter.minutes")
+languageContext:DefineLanguagePhrase("time_formatter.hours")
+languageContext:DefineLanguagePhrase("time_formatter.days")
+languageContext:DefineLanguagePhrase("time_formatter.weeks")
 
 x.FORMAT_TIME_SECONDS = 0
 x.FORMAT_TIME_MINUTES = 1
@@ -6,13 +15,15 @@ x.FORMAT_TIME_HOURS   = 2
 x.FORMAT_TIME_DAYS    = 3
 x.FORMAT_TIME_WEEKS   = 4
 
-local formatters = {
-    [x.FORMAT_TIME_SECONDS] = { Div = 60, Phrase = "сек." },
-    [x.FORMAT_TIME_MINUTES] = { Div = 60, Phrase = "м." },
-    [x.FORMAT_TIME_HOURS]   = { Div = 24, Phrase = "ч." },
-    [x.FORMAT_TIME_DAYS]    = { Div = 7,  Phrase = "д." },
-    [x.FORMAT_TIME_WEEKS]   = { Div = 7,  Phrase = "н." },
+x.TimeFormatters = {
+    [x.FORMAT_TIME_SECONDS] = { Div = 60, Phrase = "time_formatter.seconds" },
+    [x.FORMAT_TIME_MINUTES] = { Div = 60, Phrase = "time_formatter.minutes" },
+    [x.FORMAT_TIME_HOURS]   = { Div = 24, Phrase = "time_formatter.hours"   },
+    [x.FORMAT_TIME_DAYS]    = { Div = 7,  Phrase = "time_formatter.days"    },
+    [x.FORMAT_TIME_WEEKS]   = { Div = 7,  Phrase = "time_formatter.weeks"   },
 }
+
+local formatters = x.TimeFormatters
 
 function x.FormatTime(time, formatType)
     local str  = ""
@@ -34,7 +45,10 @@ function x.FormatTime(time, formatType)
             amount = temp
         end
 
-        str = amount .. " " .. formatter.Phrase .. str
+        str = amount ..
+              " " ..
+              languageContext:Phrase(formatter.Phrase) ..
+              str
 
         if not isLast then
             str = " " .. str
