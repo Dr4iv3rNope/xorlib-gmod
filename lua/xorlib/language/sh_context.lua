@@ -127,7 +127,7 @@ end
 
 function xorlib.LANGUAGE_CONTEXT:ValidateAllLanguages()
     x.EachValue(self.AvailableLanguages,
-                x.Bind(xorlib.LANGUAGE_CONTEXT.Validate, self, x._1))
+                x.Bind(self.ValidateLanguage, self, x._1))
 end
 
 function xorlib.LanguageContext(name)
