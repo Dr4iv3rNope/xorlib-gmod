@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/table", "sh_remove.lua")
+
 local table_insert = table.insert
 local table_remove = table.remove
 local next         = next
