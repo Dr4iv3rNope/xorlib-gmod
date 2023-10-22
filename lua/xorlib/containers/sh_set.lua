@@ -130,7 +130,7 @@ end
 
 function x.SetFromSequence(tbl)
     local list = setmetatable({
-        Keys = {},
+        Keys   = {},
         Values = tbl
     }, SET)
 
@@ -144,7 +144,7 @@ x.SetFromSequential = x.SetFromSequence
 
 function x.Set()
     return setmetatable({
-        Keys = {},
+        Keys   = {},
         Values = {}
     }, SET)
 end
