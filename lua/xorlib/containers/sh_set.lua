@@ -99,6 +99,16 @@ function SET:Delete(key)
     self:Reconstruct(index)
 end
 
+function SET:Clear(dontRecreateTables)
+    if dontRecreateTables then
+        x.EmptyPairs(self.Keys)
+        x.EmptySequence(self.Values)
+    else
+        self.Keys   = {}
+        self.Values = {}
+    end
+end
+
 function SET:Reconstruct(from)
     if self._BulkEdit then
         if self._BulkReconstructFromIndex > from then
