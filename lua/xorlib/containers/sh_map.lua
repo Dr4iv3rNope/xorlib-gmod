@@ -52,6 +52,16 @@ function MAP:Delete(key)
     return value
 end
 
+function MAP:Clear(dontRecreateTables)
+    if dontRecreateTables then
+        x.EmptyPairs(self.Indicies)
+        x.EmptySequence(self.Values)
+    else
+        self.Indicies = {}
+        self.Values   = {}
+    end
+end
+
 function MAP:Iterate()
     local indicies = self.Indicies
     local values   = self.Values
