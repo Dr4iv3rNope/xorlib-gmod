@@ -1,9 +1,10 @@
 xorlib.Dependency("xorlib/networking/rpc", "cl_functions.lua")
+xorlib.Dependency("xorlib/functional",     "sh_getters.lua")
 
 x.RPCRegistry = x.RPCRegistry or {}
 
 function x.RPCRegister(functionPath, id)
-    local outputFunction = x.RPCFindFunction(functionPath)
+    local outputFunction = x.IndexGlobalFunction(functionPath)
 
     x.RPCRegistry[id] = outputFunction
 end
