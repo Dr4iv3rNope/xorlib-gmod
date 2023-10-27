@@ -41,7 +41,7 @@ local allowedParseResult = {
     ["function"] = true
 }
 
-function x.IndexGlobalFunction(functionPath)
+function x.IndexGlobalFunction(functionPath, allowNil)
     local keys = explode(".", functionPath)
     local outputFunction = _G
 
@@ -54,9 +54,13 @@ function x.IndexGlobalFunction(functionPath)
 
         outputFunction = outputFunction[key]
 
-        x.Assert(allowedParseResult[type(outputFunction)],
-                 "table or function expected. Index: %s",
-                 key)
+        if not allowedParseResult[type(outputFunction)] then
+            if allowNil then
+                return nil
+            end
+
+            x.Error("table or function expected. Index: %s", key)
+        end
     end
 
     return outputFunction
