@@ -33,7 +33,9 @@ function x.CalleePath(addLevel)
 
     local info = debug_getinfo(addLevel, "Sn") or UNKNOWN_SOURCE
 
-    return (info.name or "<unknown>") .. ":" .. info.source .. ":" .. info.linedefined
+    return (info.name or "<unknown>") .. ":" ..
+           info.source .. ":" ..
+           info.linedefined
 end
 
 local allowedParseResult = {
