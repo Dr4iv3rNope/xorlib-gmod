@@ -1,3 +1,5 @@
+xorlib.Dependency("xorlib/assert", "sh_assert.lua")
+
 local unpack = unpack
 local select = select
 
@@ -43,14 +45,17 @@ function x.NetWriteVaargs(...)
 
     for i = 1, argc do
         local v = select(i, ...)
+        local t = type(v)
         local serializer
 
         -- HACK: workaround for color types
         if IsColor(v) then
             serializer = serializers.Color
         else
-            serializer = serializers[type(v)]
+            serializer = serializers[t]
         end
+
+        x.Assert(serializer, "Type \"%s\" is not supported", t)
 
         net.WriteUInt(serializer.TypeID, 8)
         serializer.Write(v)
@@ -64,6 +69,8 @@ function x.NetReadVaargs()
     for i = 1, argc do
         local t            = net.ReadUInt(8)
         local deserializer = deserializers[t]
+
+        x.Assert(deserializer, "Tried to read unsupported type %d", t)
 
         readed[i] = deserializer()
     end
