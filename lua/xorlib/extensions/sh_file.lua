@@ -33,16 +33,19 @@ function FILE:WriteColor(color)
     self:WriteByte(color.a)
 end
 
-function FILE:WriteString(str)
-    x.ExpectString(str)
-
-    if #str ~= 0 then
-        for i, codepoint in ipairs({ utf8.codepoint(str, 1, -1) }) do
-            self:WriteUShort(codepoint)
-        end
+local function writeStringInternal(f, codepoint, ...)
+    if codepoint == nil then
+        return
     end
 
-    self:WriteUShort(0)
+    f:WriteByte(codepoint)
+
+    writeStringInternal(f, ...)
+end
+
+function FILE:WriteString(str)
+    writeStringInternal(self, utf8.codepoint(str, 1, -1))
+    self:WriteByte(0)
 end
 
 function FILE:ReadBoolean()
@@ -74,17 +77,18 @@ function FILE:ReadColor()
     return Color(r, g, b, a)
 end
 
-function FILE:ReadString()
-    local str = ""
+local function readStringInternal(f, ...)
+    local codepoint = f:ReadByte()
 
-    while not self:EndOfFile() do
-        local codepoint = self:ReadUShort()
-        if codepoint == 0 then break end
-
-        str = str .. utf8.char(codepoint)
+    if codepoint ~= 0 and not f:EndOfFile() then
+        return readStringInternal(f, ..., codepoint)
     end
 
-    return str
+    return utf8.char(...)
+end
+
+function FILE:ReadString()
+    return readStringInternal(self)
 end
 
 function FILE:ReadUByte()
