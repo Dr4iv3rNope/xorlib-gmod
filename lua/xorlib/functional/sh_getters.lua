@@ -1,7 +1,8 @@
 xorlib.Dependency("xorlib/assert", "sh_assert.lua")
 
-local debug_getinfo = debug.getinfo
-local explode       = string.Explode
+local debug_getinfo  = debug.getinfo
+local string_Explode = string.Explode
+local type           = type
 
 local _R = debug.getregistry()
 
@@ -38,32 +39,39 @@ function x.CalleePath(addLevel)
            info.linedefined
 end
 
-local allowedParseResult = {
-    ["table"]    = true,
-    ["function"] = true
-}
-
-function x.IndexGlobalFunction(functionPath, allowNil)
-    local keys = explode(".", functionPath)
-    local outputFunction = _G
+function x.Index(tbl, path, filterTypes, allowNil)
+    local keys   = string_Explode(".", path)
+    local output = tbl or _G
 
     for i = 1, #keys do
-        x.Assert(type(outputFunction) == "table",
-                 "table expected. Last index is %s",
-                 keys[i - 1])
+        x.Assert(type(output) == "table",
+                 "Table expected. Last index is %s",
+                 tostring(keys[i - 1]))
 
         local key = keys[i]
 
-        outputFunction = outputFunction[key]
+        output = output[key]
 
-        if not allowedParseResult[type(outputFunction)] then
+        local outputType = type(output)
+
+        if filterTypes and not filterTypes[outputType] then
             if allowNil then
                 return nil
             end
 
-            x.Error("table or function expected. Index: %s", key)
+            x.Error("One of %s types expected, but got \"%s\". Index: %s",
+                    outputType,
+                    key)
         end
     end
 
-    return outputFunction
+    return output
+end
+
+local indexFunctionFilter = {
+    ["function"] = true
+}
+
+function x.IndexGlobalFunction(functionPath, allowNil)
+    return x.Index(nil, functionPath, indexFunctionFilter, allowNil)
 end
