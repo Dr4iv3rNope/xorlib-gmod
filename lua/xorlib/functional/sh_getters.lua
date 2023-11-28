@@ -68,6 +68,26 @@ function x.Index(tbl, path, filterTypes, allowNil)
     return output
 end
 
+function x.NewIndex(tbl, path, value)
+    local keys = string_Explode(".", path)
+
+    tbl = tbl or _G
+
+    for i = 1, #keys - 1 do
+        x.Assert(type(tbl) == "table",
+                 "Table expected. Last index is %s",
+                 tostring(keys[i - 1]))
+
+        local key = keys[i]
+
+        tbl = tbl[key]
+    end
+
+    local lastKey = keys[#keys]
+
+    tbl[lastKey] = value
+end
+
 local indexFunctionFilter = {
     ["function"] = true
 }
