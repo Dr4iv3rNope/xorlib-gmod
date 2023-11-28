@@ -39,15 +39,11 @@ function x.CalleePath(addLevel)
            info.linedefined
 end
 
-function x.Index(tbl, path, filterTypes, allowNil)
+function x.Index(entry, path, filterTypes, allowNil)
     local keys   = string_Explode(".", path)
-    local output = tbl or _G
+    local output = entry or _G
 
     for i = 1, #keys do
-        x.Assert(type(output) == "table",
-                 "Table expected. Last index is %s",
-                 tostring(keys[i - 1]))
-
         local key = keys[i]
 
         output = output[key]
@@ -68,24 +64,20 @@ function x.Index(tbl, path, filterTypes, allowNil)
     return output
 end
 
-function x.NewIndex(tbl, path, value)
+function x.NewIndex(entry, path, value)
     local keys = string_Explode(".", path)
 
-    tbl = tbl or _G
+    entry = entry or _G
 
     for i = 1, #keys - 1 do
-        x.Assert(type(tbl) == "table",
-                 "Table expected. Last index is %s",
-                 tostring(keys[i - 1]))
-
         local key = keys[i]
 
-        tbl = tbl[key]
+        entry = entry[key]
     end
 
     local lastKey = keys[#keys]
 
-    tbl[lastKey] = value
+    entry[lastKey] = value
 end
 
 local indexFunctionFilter = {
