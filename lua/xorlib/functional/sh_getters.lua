@@ -57,7 +57,7 @@ function x.Index(entry, path, filterTypes, allowNil)
 
             x.Error("One of %s types expected, but got \"%s\". Index: %s",
                     outputType,
-                    key)
+                    tostring(key))
         end
     end
 
