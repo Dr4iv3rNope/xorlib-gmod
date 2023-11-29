@@ -39,6 +39,16 @@ function x.CalleePath(addLevel)
            info.linedefined
 end
 
+local function concatFilterTypes(filterTypes)
+    local types = {}
+
+    for t, _ in pairs(filterTypes) do
+        table.insert(types, t)
+    end
+
+    return table.concat(types, ", ")
+end
+
 function x.Index(entry, path, filterTypes, allowNil)
     local keys   = string_Explode(".", path)
     local output = entry or _G
@@ -56,6 +66,7 @@ function x.Index(entry, path, filterTypes, allowNil)
             end
 
             x.Error("One of %s types expected, but got \"%s\". Index: %s",
+                    concatFilterTypes(filterTypes),
                     outputType,
                     tostring(key))
         end
