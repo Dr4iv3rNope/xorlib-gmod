@@ -4,7 +4,13 @@ xorlib.Dependency("xorlib/functional",     "sh_getters.lua")
 x.RPCRegistry = x.RPCRegistry or {}
 
 function x.RPCRegister(functionPath, id)
-    local outputFunction = x.IndexGlobalFunction(functionPath)
+    local outputFunction = x.Index(nil, functionPath)
+    local outputFunctionType = type(outputFunction)
+
+    x.Assert(outputFunctionType == "function",
+             "Tried to register function \"%s\", but got type %s",
+             functionPath,
+             outputFunctionType)
 
     x.RPCRegistry[id] = outputFunction
 end

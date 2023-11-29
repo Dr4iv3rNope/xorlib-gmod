@@ -39,17 +39,7 @@ function x.CalleePath(addLevel)
            info.linedefined
 end
 
-local function concatFilterTypes(filterTypes)
-    local types = {}
-
-    for t, _ in pairs(filterTypes) do
-        table.insert(types, t)
-    end
-
-    return table.concat(types, ", ")
-end
-
-function x.Index(entry, path, filterTypes, allowNil)
+function x.Index(entry, path)
     local keys   = string_Explode(".", path)
     local output = entry or _G
 
@@ -57,19 +47,6 @@ function x.Index(entry, path, filterTypes, allowNil)
         local key = keys[i]
 
         output = output[key]
-
-        local outputType = type(output)
-
-        if filterTypes and not filterTypes[outputType] then
-            if allowNil then
-                return nil
-            end
-
-            x.Error("One of %s types expected, but got \"%s\". Index: %s",
-                    concatFilterTypes(filterTypes),
-                    outputType,
-                    tostring(key))
-        end
     end
 
     return output
@@ -89,12 +66,4 @@ function x.NewIndex(entry, path, value)
     local lastKey = keys[#keys]
 
     entry[lastKey] = value
-end
-
-local indexFunctionFilter = {
-    ["function"] = true
-}
-
-function x.IndexGlobalFunction(functionPath, allowNil)
-    return x.Index(nil, functionPath, indexFunctionFilter, allowNil)
 end
