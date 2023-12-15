@@ -5,6 +5,14 @@ x.TimeoutTable           = x.TimeoutTable or {}
 local CurTime            = CurTime
 local globalTimeoutTable = x.TimeoutTable
 
+function x.TimeoutSet(id, timeout)
+    globalTimeoutTable[id] = CurTime() + timeout
+end
+
+function x.TimeoutSetUntil(id, time)
+    globalTimeoutTable[id] = time
+end
+
 function x.TimeoutAction(id, timeout)
     local t = CurTime()
 
@@ -24,6 +32,10 @@ end
 
 local timeoutGetUntil = x.TimeoutGetUntil
 
+function x.TimeoutGetLeft(id)
+    return timeoutGetUntil(id) - CurTime()
+end
+
 function x.TimeoutIsExpired(id)
     return CurTime() > timeoutGetUntil(id)
 end
@@ -42,15 +54,33 @@ end)
 
 local ENTITY = FindMetaTable("Entity")
 
-function ENTITY:TimeoutAction(id, timeout)
+function ENTITY:GetTimeoutTable()
     local timeoutTable = self._xorlibTimeoutTable
-    local t = CurTime()
 
     if not timeoutTable then
         timeoutTable = {}
 
         self._xorlibTimeoutTable = timeoutTable
     end
+
+    return timeoutTable
+end
+
+function ENTITY:TimeoutSet(id, timeout)
+    local timeoutTable = self:GetTimeoutTable()
+
+    timeoutTable[id] = CurTime() + timeout
+end
+
+function ENTITY:TimeoutSetUntil(id, time)
+    local timeoutTable = self:GetTimeoutTable()
+
+    timeoutTable[id] = time
+end
+
+function ENTITY:TimeoutAction(id, timeout)
+    local timeoutTable = self:GetTimeoutTable()
+    local t = CurTime()
 
     local nextAction = timeoutTable[id] or 0
 
@@ -67,6 +97,10 @@ function ENTITY:TimeoutGetUntil(id)
     if not timeoutTable then return 0 end
 
     return timeoutTable[id] or 0
+end
+
+function ENTITY:TimeoutGetLeft(id)
+    return self:TimeoutGetUntil(id) - CurTime()
 end
 
 function ENTITY:TimeoutIsExpired(id)
