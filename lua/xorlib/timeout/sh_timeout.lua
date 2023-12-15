@@ -1,5 +1,3 @@
-xorlib.Dependency("xorlib/table", "sh_filter.lua") -- x.FilterPairs
-
 x.TimeoutTable           = x.TimeoutTable or {}
 
 local CurTime            = CurTime
@@ -43,11 +41,3 @@ end
 function x.TimeoutClear(id)
     globalTimeoutTable[id] = nil
 end
-
-timer.Create("xorlib_timeout_cleanup", 60, 0, function()
-    local t = CurTime()
-
-    x.FilterPairs(globalTimeoutTable, function(nextCheck)
-        return t > nextCheck
-    end)
-end)
