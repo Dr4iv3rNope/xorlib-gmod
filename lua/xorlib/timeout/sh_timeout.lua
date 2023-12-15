@@ -5,15 +5,15 @@ x.TimeoutTable           = x.TimeoutTable or {}
 local CurTime            = CurTime
 local globalTimeoutTable = x.TimeoutTable
 
-function x.TimeoutSet(id, timeout)
-    globalTimeoutTable[id] = CurTime() + timeout
+function x.TimeoutSet(id, seconds)
+    globalTimeoutTable[id] = CurTime() + seconds
 end
 
 function x.TimeoutSetUntil(id, time)
     globalTimeoutTable[id] = time
 end
 
-function x.TimeoutAction(id, timeout)
+function x.TimeoutAction(id, seconds)
     local t = CurTime()
 
     local nextAction = globalTimeoutTable[id] or 0
@@ -22,7 +22,7 @@ function x.TimeoutAction(id, timeout)
         return false
     end
 
-    globalTimeoutTable[id] = t + timeout
+    globalTimeoutTable[id] = t + seconds
     return true
 end
 
@@ -66,10 +66,10 @@ function ENTITY:GetTimeoutTable()
     return timeoutTable
 end
 
-function ENTITY:TimeoutSet(id, timeout)
+function ENTITY:TimeoutSet(id, seconds)
     local timeoutTable = self:GetTimeoutTable()
 
-    timeoutTable[id] = CurTime() + timeout
+    timeoutTable[id] = CurTime() + seconds
 end
 
 function ENTITY:TimeoutSetUntil(id, time)
