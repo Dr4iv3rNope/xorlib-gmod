@@ -65,3 +65,32 @@ function x.MapCopyPairs(tbl, callback)
 
     return newTable
 end
+
+function x.MapIntoSequence(tbl, callback)
+    local i = 1
+
+    for k, v in pairs(tbl) do
+        local newValue = callback(v, k)
+
+        tbl[i] = newValue
+
+        i = i + 1
+    end
+
+    return tbl
+end
+
+function x.MapCopyIntoSequence(tbl, callback)
+    local newTable = {}
+    local i = 1
+
+    for k, v in pairs(tbl) do
+        local newValue = callback(v, k)
+
+        newTable[i] = newValue
+
+        i = i + 1
+    end
+
+    return newTable
+end
