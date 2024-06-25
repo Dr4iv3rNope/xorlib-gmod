@@ -78,5 +78,5 @@ function x.FormatTimeOnly(time, formatType)
         end
     end
 
-    return amount .. " " .. formatters[formatType].Phrase
+    return amount .. " " .. languageContext:Phrase(formatters[formatType].Phrase)
 end
