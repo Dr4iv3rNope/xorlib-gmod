@@ -6,7 +6,7 @@ hook.Add("player_activate", "xorlib_network_player", function(data)
 
         if not IsValid(ply) then return end
 
-        hook.Run("PlayerInitialSpawn", ply)
+        hook.Run("CL_PlayerInitialSpawn", ply)
     end)
 end, HOOK_MONITOR_HIGH)
 

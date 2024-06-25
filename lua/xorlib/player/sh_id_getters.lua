@@ -43,8 +43,8 @@ local function removePlayer(ply)
     accountIDPlayers[ply:AccountID()] = nil
 end
 
-hook.Add("PlayerInitialSpawn", "xorlib_id_getters", addPlayer, HOOK_MONITOR_HIGH)
-hook.Add("PlayerDisconnected", "xorlib_id_getters", removePlayer, HOOK_MONITOR_LOW)
+hook.Add(SERVER and "PlayerInitialSpawn" or "CL_PlayerInitialSpawn", "xorlib_id_getters", addPlayer, HOOK_MONITOR_HIGH)
+hook.Add(SERVER and "PlayerDisconnected" or "CL_PlayerDisconnected", "xorlib_id_getters", removePlayer, HOOK_MONITOR_LOW)
 
 x.EnsureInitPostEntity(function()
     x.EachSequence(player.GetAll(), addPlayer)

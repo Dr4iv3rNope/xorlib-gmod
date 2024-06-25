@@ -26,13 +26,13 @@ function x.RegisterPlayerGetters(funcName, filter)
         x.PlayerGettersCache[funcName] = cache
     end
 
-    hook.Add("PlayerInitialSpawn", "xorlib_player_getter_" .. funcName, function(ply)
+    hook.Add(SERVER and "PlayerInitialSpawn" or "CL_PlayerInitialSpawn", "xorlib_player_getter_" .. funcName, function(ply)
         if not filter(ply) then return end
 
         table.insert(cache.Players, ply)
     end, HOOK_MONITOR_HIGH)
 
-    hook.Add("PlayerDisconnected", "xorlib_player_getter_" .. funcName, function(ply)
+    hook.Add(SERVER and "PlayerDisconnected" or "CL_PlayerDisconnected", "xorlib_player_getter_" .. funcName, function(ply)
         x.RemoveSequenceValue(cache.Players, ply)
     end, HOOK_MONITOR_LOW)
 
