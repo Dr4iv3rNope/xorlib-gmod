@@ -1,6 +1,5 @@
 xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
 xorlib.Dependency("xorlib/hook", "sh_utils.lua") -- hook.Once
-xorlib.Dependency("xorlib/table", "sh_remove.lua") -- x.FilterSequence, x.RemoveSequenceValue
 
 x.PlayerGettersCache = x.PlayerGettersCache or {}
 
@@ -9,9 +8,16 @@ function x.RebuildPlayerGetters(funcName)
                            "Player getters \"%s\" is not registered!",
                            funcName)
 
-    cache.Players = player.GetAll()
+    cache.Players:Clear()
+    cache.Players:BulkEdit()
 
-    x.FilterSequence(cache.Players, cache.Filter)
+    for _, ply in player.Iterator() do
+        if cache.Filter(ply) then
+            cache.Players:Insert(ply)
+        end
+    end
+
+    cache.Players:CommitBulkEdit()
 end
 
 function x.RegisterPlayerGetters(funcName, filter)
@@ -20,7 +26,7 @@ function x.RegisterPlayerGetters(funcName, filter)
     if not cache then
         cache = {
             Filter  = filter,
-            Players = {}
+            Players = x.Set()
         }
 
         x.PlayerGettersCache[funcName] = cache
@@ -29,15 +35,15 @@ function x.RegisterPlayerGetters(funcName, filter)
     hook.Add(SERVER and "PlayerInitialSpawn" or "CL_PlayerInitialSpawn", "xorlib_player_getter_" .. funcName, function(ply)
         if not filter(ply) then return end
 
-        table.insert(cache.Players, ply)
+        cache.Players:Insert(ply)
     end, HOOK_MONITOR_HIGH)
 
     hook.Add(SERVER and "PlayerDisconnected" or "CL_PlayerDisconnected", "xorlib_player_getter_" .. funcName, function(ply)
-        x.RemoveSequenceValue(cache.Players, ply)
+        cache.Players:Delete(ply)
     end, HOOK_MONITOR_LOW)
 
     x["Get" .. funcName .. "Players"] = function()
-        return cache.Players
+        return cache.Players.Values
     end
 
     x.RebuildPlayerGetters(funcName)
