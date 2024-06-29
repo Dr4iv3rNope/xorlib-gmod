@@ -52,7 +52,7 @@ end
 local function registerPlayerGetters()
     local dontCreateDefaultGetters = hook.Run("XRegisterPlayerGetters")
 
-    if not dontCreateDefaultGetters then
+    if dontCreateDefaultGetters ~= true then
         x.RegisterPlayerGetters("SuperAdmin", x.Meta("Player", "IsSuperAdmin"))
         x.RegisterPlayerGetters("Admin",      x.Meta("Player", "IsAdmin"))
     end
