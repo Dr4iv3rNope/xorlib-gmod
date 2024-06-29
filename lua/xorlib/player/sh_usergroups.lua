@@ -42,6 +42,27 @@ function x.RegisterPlayerGetters(funcName, filter)
         cache.Players:Delete(ply)
     end, HOOK_MONITOR_LOW)
 
+    if ULib then
+        hook.Add(ULib.HOOK_UCLAUTH, "xorlib_player_getter_" .. funcName, function(ply)
+            local plyIsInThisCache = cache.Players:Has(ply)
+
+            if plyIsInThisCache == filter(ply) then
+                -- group is not changed
+                return
+            end
+
+            if plyIsInThisCache then
+                -- player has been moved from this group
+                cache.Players:Delete(ply)
+            else
+                -- player has been moved to this group
+                cache.Players:Insert(ply)
+            end
+        end, HOOK_MONITOR_HIGH)
+    elseif sam then
+        -- TODO: support for sam
+    end
+
     x["Get" .. funcName .. "Players"] = function()
         return cache.Players.Values
     end
