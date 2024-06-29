@@ -1,6 +1,6 @@
-xorlib.Dependency("xorlib/assert", "sh_assert.lua")	-- x.Assert
-xorlib.Dependency("xorlib/hook", "sh_utils.lua")	-- hook.Once
-xorlib.Dependency("xorlib/table", "sh_remove.lua")	-- x.FilterSequence, x.RemoveSequenceValue
+xorlib.Dependency("xorlib/assert", "sh_assert.lua") -- x.Assert
+xorlib.Dependency("xorlib/hook", "sh_utils.lua") -- hook.Once
+xorlib.Dependency("xorlib/table", "sh_remove.lua") -- x.FilterSequence, x.RemoveSequenceValue
 
 x.PlayerGettersCache = x.PlayerGettersCache or {}
 
@@ -20,7 +20,7 @@ function x.RegisterPlayerGetters(funcName, filter)
     if not cache then
         cache = {
             Filter  = filter,
-            Players	= {}
+            Players = {}
         }
 
         x.PlayerGettersCache[funcName] = cache

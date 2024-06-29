@@ -16,8 +16,9 @@ x = xorlib
 
 local PRINT_PREFIX = CLIENT and "CLIENT" or "SERVER"
 
-local USE_XORLIB_FILENAME	= "!.use_xorlib.lua"
-local XORLIB_SETUP_FILENAME	= "!.xorlib_setup.lua"
+local USE_XORLIB_FILENAME   = "!.use_xorlib.lua"
+local XORLIB_SETUP_FILENAME = "!.xorlib_setup.lua"
+
 local LUA_EXT_PATTERN = "%.lua$"
 
 local ignoreIncludes = {}

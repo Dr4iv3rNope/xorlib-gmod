@@ -1,5 +1,5 @@
-local table_remove	= table.remove
-local pairs			= pairs
+local table_remove = table.remove
+local pairs        = pairs
 
 function x.FilterSequence(tbl, callback)
     local filtered = 0

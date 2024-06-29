@@ -36,7 +36,7 @@ x.NetworkTypesDeserializers =
 }
 
 local serializers   = x.NetworkTypesSerializers
-local deserializers	= x.NetworkTypesDeserializers
+local deserializers = x.NetworkTypesDeserializers
 
 function x.NetWriteVaargs(...)
     local argc = select("#", ...)

@@ -69,9 +69,9 @@ function xorlib.LANGUAGE_CONTEXT:GetPhraseID(phraseIndex)
 end
 
 function xorlib.LANGUAGE_CONTEXT:_NetWritePhraseEx(phraseID, isExtended, ...)
-	net.WriteUInt(self:GetPhraseIndex(phraseID), 32)
+    net.WriteUInt(self:GetPhraseIndex(phraseID), 32)
     net.WriteBool(isExtended)
-	x.NetWriteVaargs(...)
+    x.NetWriteVaargs(...)
 end
 
 function xorlib.LANGUAGE_CONTEXT:NetWritePhrase(phraseID, ...)
@@ -83,11 +83,11 @@ function xorlib.LANGUAGE_CONTEXT:NetWritePhraseEx(phraseID, ...)
 end
 
 function xorlib.LANGUAGE_CONTEXT:NetReadPhrase(disallowExtended)
-	local phraseIndex = net.ReadUInt(32)
+    local phraseIndex = net.ReadUInt(32)
     local isExtended  = net.ReadBool()
-	local phraseID    = self:GetPhraseID(phraseIndex)
+    local phraseID    = self:GetPhraseID(phraseIndex)
 
-	if not disallowExtended and isExtended then
+    if not disallowExtended and isExtended then
         return self:Phrase(phraseID, x.NetReadVaargsUnpacked())
     else
         return self:PhraseEx(phraseID, x.NetReadVaargsUnpacked())
@@ -106,23 +106,23 @@ function xorlib.LANGUAGE_CONTEXT:IndexPhrases()
 end
 
 function xorlib.LANGUAGE_CONTEXT:ValidateLanguage(language)
-	for phraseID, _ in pairs(self.RequiredPhrases) do
-		if not language.Phrases[phraseID] then
-			x.Warn("Context \"%s\": language \"%s\" doesn't have phrase id: \"%s\"",
+    for phraseID, _ in pairs(self.RequiredPhrases) do
+        if not language.Phrases[phraseID] then
+            x.Warn("Context \"%s\": language \"%s\" doesn't have phrase id: \"%s\"",
                    self.Name,
-				   language.Name,
-				   phraseID)
-		end
-	end
-
-	for phraseID, _ in pairs(language.Phrases) do
-		if not self.RequiredPhrases[phraseID] then
-			x.Warn("Context \"%s\": language \"%s\" contains unknown phrase id: \"%s\"",
-				   self.Name,
                    language.Name,
-				   phraseID)
-		end
-	end
+                   phraseID)
+        end
+    end
+
+    for phraseID, _ in pairs(language.Phrases) do
+        if not self.RequiredPhrases[phraseID] then
+            x.Warn("Context \"%s\": language \"%s\" contains unknown phrase id: \"%s\"",
+                   self.Name,
+                   language.Name,
+                   phraseID)
+        end
+    end
 end
 
 function xorlib.LANGUAGE_CONTEXT:ValidateAllLanguages()

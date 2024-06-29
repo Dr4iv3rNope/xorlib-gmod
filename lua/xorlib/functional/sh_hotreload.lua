@@ -3,8 +3,8 @@ xorlib.Dependency("xorlib/hook", "sh_utils.lua") -- hook.Once
 
 function x.EnsureInitialized(callback)
     if not GAMEMODE then
-        local callbacks	= hook.GetTable().Initialize or {}
-        local name		= tostring(table.Count(callbacks) + 1)
+        local callbacks = hook.GetTable().Initialize or {}
+        local name      = tostring(table.Count(callbacks) + 1)
 
         hook.Once("Initialize", name, callback)
     else
