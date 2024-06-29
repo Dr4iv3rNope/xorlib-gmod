@@ -2,12 +2,9 @@ xorlib.Dependency("xorlib/assert", "sh_assert.lua")
 
 local debug_getinfo  = debug.getinfo
 local string_Explode = string.Explode
-local type           = type
-
-local _R = debug.getregistry()
 
 function x.Meta(meta, name)
-    return _R[meta][name]
+    return FindMetaTable(meta)[name]
 end
 
 function x.Callee(addLevel, flags)
