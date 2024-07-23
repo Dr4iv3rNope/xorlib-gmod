@@ -26,6 +26,8 @@ function PANEL:BuildMask(w, h)
 end
 
 function PANEL:PerformLayout(w, h)
+    MaskedPanel.PerformLayout(self, w, h)
+
     self.Avatar:SetSize(w, h)
 end
 
