@@ -54,6 +54,8 @@ end
 local function removePlayerByUserID(userId)
     local idCache = x.PlayerIDCache[userId]
 
+    if not idCache then return end
+
     x.PlayerIDCache[userId] = nil
 
     steamIDPlayers[idCache.SteamID]     = nil
