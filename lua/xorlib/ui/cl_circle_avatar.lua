@@ -13,7 +13,7 @@ local PANEL = {}
 function PANEL:Init()
     MaskedPanel.Init(self)
 
-    self._Avatar = vgui.Create("AvatarImage", self)
+    self.Avatar = vgui.Create("AvatarImage", self)
 end
 
 function PANEL:BuildMask(w, h)
