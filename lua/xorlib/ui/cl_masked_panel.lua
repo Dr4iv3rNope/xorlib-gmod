@@ -29,14 +29,16 @@ function PANEL:Paint(w, h)
     self:PaintMasked(w, h)
 
     for _, child in ipairs(self:GetChildren()) do
-        child:SetPaintedManually(true)
         child:PaintManual()
-        child:SetPaintedManually(false)
     end
 
     self:PaintOverMasked(w, h)
 
     EndDrawMasked()
+end
+
+function PANEL:OnChildAdded(child)
+    child:SetPaintedManually(true)
 end
 
 function PANEL:Init()
