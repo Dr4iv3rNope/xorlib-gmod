@@ -422,7 +422,7 @@ function PANEL:CreateItem(panelClass,
                           columnStart, columnEnd,
                           rowStart, rowEnd,
                           rememberLines)
-    local panel = self:CreateStyledChild(panelClass)
+    local panel = vgui.Create(panelClass, self)
 
     local item  = self:InsertItem(panel,
                                   columnStart, columnEnd,
