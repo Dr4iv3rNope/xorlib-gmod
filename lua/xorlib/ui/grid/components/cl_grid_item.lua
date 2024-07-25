@@ -273,10 +273,10 @@ function GRID_ITEM:CalculateLayout()
             h = math.min(h, self.MaxTall)
         end
     else
-        local _, _, aw, ah = x.AlignRect(
+        local _, _, aw, ah = xorlib.AlignRect(
             rw, rh,
             self.Aspect.Width, self.Aspect.Tall,
-            x.ALIGN_RECT_FIT
+            xorlib.ALIGN_RECT_FIT
         )
 
         w = aw
