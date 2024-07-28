@@ -119,22 +119,26 @@ end
 function x.PolyRoundedBoxEx(x, y,
                             w, h,
                             segments,
-                            ltCornerRoundPercent, -- Left Top
-                            rtCornerRoundPercent, -- Right Top
-                            lbCornerRoundPercent, -- Left Bottom
-                            rbCornerRoundPercent) -- Right Bottom
+                            ltCornerRound, -- Left Top
+                            rtCornerRound, -- Right Top
+                            lbCornerRound, -- Left Bottom
+                            rbCornerRound) -- Right Bottom
     local polys = {}
 
     local maxRoundAmount = min(w, h) / 2
 
     -- left top corner
-    if ltCornerRoundPercent ~= 0 then
+    if ltCornerRound ~= 0 then
+        if ltCornerRound <= 1 then
+            ltCornerRound = maxRoundAmount * ltCornerRound
+        end
+
         pushRoundedCorner(polys,
                           x, y,
                           false, false,
                           segments,
                           pi,
-                          maxRoundAmount * ltCornerRoundPercent)
+                          ltCornerRound)
     else
         polys[1] = {
             x = x,
@@ -143,13 +147,17 @@ function x.PolyRoundedBoxEx(x, y,
     end
 
     -- right top corner
-    if rtCornerRoundPercent ~= 0 then
+    if rtCornerRound ~= 0 then
+        if rtCornerRound <= 1 then
+            rtCornerRound = maxRoundAmount * rtCornerRound
+        end
+
         pushRoundedCorner(polys,
                           x + w, y,
                           true, false,
                           segments,
                           -pi_2,
-                          maxRoundAmount * rtCornerRoundPercent)
+                          rtCornerRound)
     else
         polys[#polys + 1] = {
             x = x + w,
@@ -158,13 +166,17 @@ function x.PolyRoundedBoxEx(x, y,
     end
 
     -- right bottom corner
-    if rbCornerRoundPercent ~= 0 then
+    if rbCornerRound ~= 0 then
+        if rbCornerRound <= 1 then
+            rbCornerRound = maxRoundAmount * rbCornerRound
+        end
+
         pushRoundedCorner(polys,
                           x + w, y + h,
                           true, true,
                           segments,
                           0,
-                          maxRoundAmount * rbCornerRoundPercent)
+                          rbCornerRound)
     else
         polys[#polys + 1] = {
             x = x + w,
@@ -173,13 +185,17 @@ function x.PolyRoundedBoxEx(x, y,
     end
 
     -- left bottom corner
-    if lbCornerRoundPercent ~= 0 then
+    if lbCornerRound ~= 0 then
+        if lbCornerRound <= 1 then
+            lbCornerRound = maxRoundAmount * lbCornerRound
+        end
+
         pushRoundedCorner(polys,
                           x, y + h,
                           false, true,
                           segments,
                           pi_2,
-                          maxRoundAmount * lbCornerRoundPercent)
+                          lbCornerRound)
     else
         polys[#polys + 1] = {
             x = x,
@@ -193,14 +209,14 @@ end
 function x.PolyRoundedBox(x, y,
                           w, h,
                           segments,
-                          cornerRoundPercent)
+                          cornerRound)
     return xorlib.PolyRoundedBoxEx(x, y,
                                    w, h,
                                    segments,
-                                   cornerRoundPercent,
-                                   cornerRoundPercent,
-                                   cornerRoundPercent,
-                                   cornerRoundPercent)
+                                   cornerRound,
+                                   cornerRound,
+                                   cornerRound,
+                                   cornerRound)
 end
 
 --
