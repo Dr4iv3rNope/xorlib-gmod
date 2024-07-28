@@ -3,7 +3,7 @@ xorlib.Dependency("xorlib/functional", "sh_getters.lua") -- x.CalleePath
 
 function x.SetupScreenSize(callback, id)
     x.ExpectFunction(callback)
-    id = x.ExpectStringOrDefault(id, x.CalleePath())
+    id = x.ExpectStringOrDefault(id, x.CalleePath(2))
 
     callback(ScrW(), ScrH())
 
