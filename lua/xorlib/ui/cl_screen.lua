@@ -7,7 +7,5 @@ function x.SetupScreenSize(callback, id)
 
     callback(ScrW(), ScrH())
 
-    if not (hook.GetTable().OnScreenSizeChanged or {})[id] then
-        hook.Add("OnScreenSizeChanged", id, callback)
-    end
+    hook.Add("OnScreenSizeChanged", id, x.Bind(callback, x._3, x._4))
 end
