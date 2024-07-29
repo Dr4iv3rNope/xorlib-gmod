@@ -25,9 +25,14 @@ function MAP:Get(key)
     return self.Values[self.Indices[key]]
 end
 
+function MAP:Key(value)
+    return self.KeyMap[value]
+end
+
 function MAP:Set(key, value)
     local indices = self.Indices
     local values  = self.Values
+    local keyMap  = self.KeyMap
 
     local index = indices[key]
 
@@ -37,12 +42,14 @@ function MAP:Set(key, value)
     else
         -- insert new value
         indices[key] = table_insert(values, value)
+        keyMap[value] = key
     end
 end
 
 function MAP:Delete(key)
     local indices = self.Indices
     local values  = self.Values
+    local keyMap  = self.KeyMap
 
     local index = indices[key]
     if index == nil then return end
@@ -50,6 +57,7 @@ function MAP:Delete(key)
     local value = table_remove(values, index)
 
     indices[key] = nil
+    keyMap[value] = nil
 
     self:Reconstruct(index)
 
@@ -60,9 +68,11 @@ function MAP:Clear(dontRecreateTables)
     if dontRecreateTables then
         x.EmptyPairs(self.Indices)
         x.EmptySequence(self.Values)
+        x.EmptyPairs(self.KeyMap)
     else
         self.Indices = {}
         self.Values  = {}
+        self.KeyMap  = {}
     end
 end
 
@@ -94,11 +104,13 @@ function MAP:Reconstruct(from)
 
     local indices = self.Indices
     local values  = self.Values
+    local keyMap  = self.KeyMap
 
     for i = from, #values do
         local v = values[i]
+        local k = keyMap[v]
 
-        indices[v] = i
+        indices[k] = i
     end
 end
 
@@ -128,9 +140,11 @@ function x.MapFromPairs(tbl)
 
     local indices = map.Indices
     local values  = map.Values
+    local keyMap  = map.KeyMap
 
     for k, v in pairs(tbl) do
         indices[k] = table_insert(values, v)
+        keyMap[v] = k
     end
 
     return map
@@ -143,6 +157,7 @@ function x.Map()
     return setmetatable({
         Indices = indices,
         Values  = {},
+        KeyMap  = {},
 
         _BulkEdit = nil,
         _BulkReconstructFromIndex = nil,
