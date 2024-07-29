@@ -51,6 +51,8 @@ function MAP:Delete(key)
 
     indices[key] = nil
 
+    self:Reconstruct(index)
+
     return value
 end
 
@@ -61,6 +63,42 @@ function MAP:Clear(dontRecreateTables)
     else
         self.Indices = {}
         self.Values  = {}
+    end
+end
+
+function MAP:BulkEdit()
+    if self._BulkEdit then return end
+
+    self._BulkEdit = true
+    self._BulkReconstructFromIndex = #self.Values + 1
+end
+
+function MAP:CommitBulkEdit()
+    if not self._BulkEdit then return end
+
+    self._BulkEdit = nil
+
+    self:Reconstruct(self._BulkReconstructFromIndex)
+
+    self._BulkReconstructFromIndex = nil
+end
+
+function MAP:Reconstruct(from)
+    if self._BulkEdit then
+        if self._BulkReconstructFromIndex > from then
+            self._BulkReconstructFromIndex = from
+        end
+
+        return
+    end
+
+    local indices = self.Indices
+    local values  = self.Values
+
+    for i = from, #values do
+        local v = values[i]
+
+        indices[v] = i
     end
 end
 
@@ -105,6 +143,9 @@ function x.Map()
     return setmetatable({
         Indices = indices,
         Values  = {},
+
+        _BulkEdit = nil,
+        _BulkReconstructFromIndex = nil,
 
         -- HACK: deprecated
         Indicies = indices,
