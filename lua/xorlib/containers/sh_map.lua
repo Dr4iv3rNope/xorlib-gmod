@@ -14,64 +14,64 @@ function MAP:Length()
 end
 
 function MAP:Has(key)
-    return self.Indicies[key] ~= nil
+    return self.Indices[key] ~= nil
 end
 
 function MAP:Index(key)
-    return self.Indicies[key]
+    return self.Indices[key]
 end
 
 function MAP:Get(key)
-    return self.Values[self.Indicies[key]]
+    return self.Values[self.Indices[key]]
 end
 
 function MAP:Set(key, value)
-    local indicies = self.Indicies
-    local values   = self.Values
+    local indices = self.Indices
+    local values  = self.Values
 
-    local index = indicies[key]
+    local index = indices[key]
 
     if index ~= nil then
         -- override value
         values[index] = value
     else
         -- insert new value
-        indicies[key] = table_insert(values, value)
+        indices[key] = table_insert(values, value)
     end
 end
 
 function MAP:Delete(key)
-    local indicies = self.Indicies
-    local values   = self.Values
+    local indices = self.Indices
+    local values  = self.Values
 
-    local index = indicies[key]
+    local index = indices[key]
     if index == nil then return end
 
     local value = table_remove(values, index)
 
-    indicies[key] = nil
+    indices[key] = nil
 
     return value
 end
 
 function MAP:Clear(dontRecreateTables)
     if dontRecreateTables then
-        x.EmptyPairs(self.Indicies)
+        x.EmptyPairs(self.Indices)
         x.EmptySequence(self.Values)
     else
-        self.Indicies = {}
-        self.Values   = {}
+        self.Indices = {}
+        self.Values  = {}
     end
 end
 
 function MAP:Iterate()
-    local indicies = self.Indicies
-    local values   = self.Values
+    local indices = self.Indices
+    local values  = self.Values
 
     local prevKey = nil
 
     return function()
-        local key, index = next(indicies, prevKey)
+        local key, index = next(indices, prevKey)
 
         if key == nil then
             return nil -- end of iteration
@@ -88,19 +88,25 @@ end
 function x.MapFromPairs(tbl)
     local map = x.Map()
 
-    local indicies = map.Indicies
-    local values   = map.Values
+    local indices = map.Indices
+    local values  = map.Values
 
     for k, v in pairs(tbl) do
-        indicies[k] = table_insert(values, v)
+        indices[k] = table_insert(values, v)
     end
 
     return map
 end
 
 function x.Map()
+    -- TODO: remove deprecated "Indicies" later
+    local indices = {}
+
     return setmetatable({
-        Indicies = {},
-        Values   = {}
+        Indices = indices,
+        Values  = {},
+
+        -- HACK: deprecated
+        Indicies = indices,
     }, MAP)
 end
