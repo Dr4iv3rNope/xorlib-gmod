@@ -135,7 +135,7 @@ function xorlib.LanguageContext(name)
         Name               = name,
 
         AvailableLanguages = {},
-        ActiveLanguage     = xorlib.FallbackLangauge,
+        ActiveLanguage     = xorlib.FallbackLanguage,
 
         RequiredPhrases    = {},
         IndexedPhrases     = {}
