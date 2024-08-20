@@ -69,7 +69,14 @@ function xorlib.LANGUAGE_CONTEXT:GetPhraseID(phraseIndex)
 end
 
 function xorlib.LANGUAGE_CONTEXT:_NetWritePhraseEx(phraseID, isExtended, ...)
-    net.WriteUInt(self:GetPhraseIndex(phraseID), 32)
+    local phraseIndex = self:GetPhraseIndex(phraseID)
+
+    x.Assert(phraseIndex,
+             "No phrase \"%s\" in context \"%s\"",
+             phraseID,
+             self.Name)
+
+    net.WriteUInt(phraseIndex, 32)
     net.WriteBool(isExtended)
     x.NetWriteVaargs(...)
 end
