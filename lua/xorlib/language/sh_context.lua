@@ -94,7 +94,7 @@ function xorlib.LANGUAGE_CONTEXT:NetReadPhrase(disallowExtended)
     local isExtended  = net.ReadBool()
     local phraseID    = self:GetPhraseID(phraseIndex)
 
-    if not disallowExtended and isExtended then
+    if disallowExtended or not isExtended then
         return self:Phrase(phraseID, x.NetReadVaargsUnpacked())
     else
         return self:PhraseEx(phraseID, x.NetReadVaargsUnpacked())
