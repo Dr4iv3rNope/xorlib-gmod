@@ -48,3 +48,13 @@ end
 function x.PrettySequence(tbl)
     return x.MapSequence(tbl, x.PrettyValue)
 end
+
+local function internalPrettyVaargs(value, ...)
+    if value == nil then return end
+
+    return x.PrettyValue(value), internalPrettyVaargs(...)
+end
+
+function x.PrettyVaargs(...)
+    return internalPrettyVaargs(...)
+end

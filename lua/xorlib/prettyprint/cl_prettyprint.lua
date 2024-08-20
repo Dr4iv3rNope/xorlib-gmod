@@ -1,16 +1,38 @@
 xorlib.Dependency("xorlib/networking",  "sh_vaargs.lua")      -- x.NetReadVaargs
-xorlib.Dependency("xorlib/prettyprint", "sh_prettyprint.lua") -- x.PrettySequence
+xorlib.Dependency("xorlib/prettyprint", "sh_prettyprint.lua") -- x.PrettyVaargs
 
+-- TODO: deprecated. Use `x.PrettyPrint(unpack(data))`
 function x.PrettyPrintData(data)
-    chat.AddText(unpack(x.PrettySequence(data)))
+    x.PrettyPrint(unpack(data))
 end
 
 function x.PrettyPrint(...)
-    x.PrettyPrintData({ ... })
+    chat.AddText(x.PrettyVaargs(...))
 end
 
-net.Receive("xorlib_prettyprint", function()
-    local data = x.NetReadVaargs()
+local function internalNetReadPrettyPrintLang(context, argc)
+    if argc == 0 then return end
 
-    x.PrettyPrintData(data)
+    local isPhrase = net.ReadBool()
+
+    if isPhrase then
+        return context:NetReadPhrase(), internalNetReadPrettyPrintLang(context, argc - 1)
+    else
+        return x.PrettyValue(net.ReadType()), internalNetReadPrettyPrintLang(context, argc - 1)
+    end
+end
+
+function x.NetReadPrettyPrintLang()
+    local argc = net.ReadUInt(8)
+    local contextName = net.ReadString()
+
+    local context = x.LanguageContextList[contextName]
+
+    x.Assert(context, "Language context \"%s\" doesn't exist", contextName)
+
+    return internalNetReadPrettyPrintLang(context, argc)
+end
+
+net.Receive("xorlib_prettyprint_lang", function()
+    chat.AddText(x.NetReadPrettyPrintLang())
 end)
