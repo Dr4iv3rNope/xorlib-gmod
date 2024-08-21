@@ -28,7 +28,34 @@ function xorlib.LANGUAGE_CONTEXT:GetLanguage(name)
 end
 
 function xorlib.LANGUAGE_CONTEXT:ChangeLanguage(newLanguageName)
-    local newLanguage = self:GetLanguage(newLanguageName)
+    local newLanguage
+
+    if not self:HasLanguage(newLanguageName) then
+        if self._FallbackTo then
+            newLanguage = self.AvailableLanguages[self._FallbackTo]
+
+            if not newLanguage then
+                x.ErrorNoHalt(
+                    "Language context \"%s\" has invalid fallback language (%s)",
+                    self._FallbackTo
+                )
+            end
+        end
+
+        if not newLanguage then
+            newLanguage = xorlib.FallbackLanguage
+        end
+
+        x.Warn(
+            "Language context \"%s\" doesn't have language \"%s\", fallback to \"%s\"!",
+            self.Name,
+            newLanguageName,
+            newLanguage.Name
+        )
+    else
+        newLanguage = self.AvailableLanguages[newLanguageName]
+    end
+
     local oldLanguage = self.ActiveLanguage
 
     if newLanguage == oldLanguage then
@@ -137,6 +164,19 @@ function xorlib.LANGUAGE_CONTEXT:ValidateAllLanguages()
                 x.Bind(self.ValidateLanguage, self, x._1))
 end
 
+-- Ignores xorlib.ChangeLanguageForAllLanguageContexts
+function xorlib.LANGUAGE_CONTEXT:Explicit()
+    self._Explicit = true
+
+    return self
+end
+
+function xorlib.LANGUAGE_CONTEXT:FallbackTo(languageName)
+    self._FallbackTo = languageName
+
+    return self
+end
+
 function xorlib.LanguageContext(name)
     local context = setmetatable({
         Name               = name,
@@ -145,7 +185,10 @@ function xorlib.LanguageContext(name)
         ActiveLanguage     = xorlib.FallbackLanguage,
 
         RequiredPhrases    = {},
-        IndexedPhrases     = {}
+        IndexedPhrases     = {},
+
+        _Explicit = false,
+        _FallbackTo = nil,
     }, xorlib.LANGUAGE_CONTEXT)
 
     xorlib.LanguageContextList[name] = context
