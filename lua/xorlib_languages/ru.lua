@@ -1,4 +1,4 @@
-local LANG = x.XorlibLanguageContext:DefineLanguage("en")
+local LANG = x.XorlibLanguageContext:DefineLanguage("ru")
 
 LANG:Phrase("time_formatter.seconds", "сек.")
 LANG:Phrase("time_formatter.minutes", "м.")

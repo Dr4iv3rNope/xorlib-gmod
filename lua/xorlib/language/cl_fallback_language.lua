@@ -1,4 +1,4 @@
-xorlib.Dependency("xorlib/language", "sh_language.lua")
+xorlib.Dependency("xorlib/language", "cl_language.lua")
 
 xorlib.FallbackLanguage = xorlib.Language("<FALLBACK_LANGUAGE>")
 
