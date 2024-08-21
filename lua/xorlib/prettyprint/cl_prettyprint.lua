@@ -1,11 +1,6 @@
 xorlib.Dependency("xorlib/networking",  "sh_vaargs.lua")      -- x.NetReadVaargs
 xorlib.Dependency("xorlib/prettyprint", "sh_prettyprint.lua") -- x.PrettyVaargs
 
--- TODO: deprecated. Use `x.PrettyPrint(unpack(data))`
-function x.PrettyPrintData(data)
-    x.PrettyPrint(unpack(data))
-end
-
 function x.PrettyPrint(...)
     chat.AddText(x.PrettyVaargs(...))
 end
