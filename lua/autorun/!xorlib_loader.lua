@@ -28,11 +28,9 @@ local function loaderPrint(fmt, ...)
 end
 
 local function sortByShared(files)
-    local SHARED_LUA_FILE_PATTERN = "^sh_.+%.lua$"
-
     table.sort(files, function(a, b)
-        local aIsShared = string.match(a, SHARED_LUA_FILE_PATTERN) ~= nil
-        local bIsShared = string.match(b, SHARED_LUA_FILE_PATTERN) ~= nil
+        local aIsShared = xorlib.FindMatchingIncluder(a) == xorlib.SharedIncluder
+        local bIsShared = xorlib.FindMatchingIncluder(b) == xorlib.SharedIncluder
 
         if aIsShared and bIsShared then return false end
         if aIsShared then return true end
