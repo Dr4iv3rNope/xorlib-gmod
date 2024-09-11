@@ -182,8 +182,8 @@ function xorlib.LanguageContext(name)
     local context = setmetatable({
         Name               = name,
 
-        AvailableLanguages = CLIENT and {},
-        ActiveLanguage     = CLIENT and xorlib.FallbackLanguage,
+        AvailableLanguages = {},
+        ActiveLanguage     = xorlib.FallbackLanguage,
 
         RequiredPhrases    = {},
         IndexedPhrases     = {},
