@@ -37,8 +37,13 @@ function MAP:Set(key, value)
     local index = indices[key]
 
     if index ~= nil then
+        local oldValue = values[index]
+
+        keyMap[oldValue] = nil
+
         -- override value
         values[index] = value
+        keyMap[value] = key
     else
         -- insert new value
         indices[key] = table_insert(values, value)
