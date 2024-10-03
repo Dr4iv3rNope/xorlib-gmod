@@ -2,6 +2,7 @@ xorlib.Dependency("xorlib/table", "sh_remove.lua")
 
 local table_insert = table.insert
 local table_remove = table.remove
+local table_sort   = table.sort
 
 xorlib.SET = xorlib.SET or {}
 
@@ -128,6 +129,12 @@ function SET:Reconstruct(from)
 
         keys[v] = i
     end
+end
+
+function SET:Sort(comparator)
+    table_sort(self.Values, comparator)
+
+    self:Reconstruct(1)
 end
 
 function x.SetFromSequence(tbl)
