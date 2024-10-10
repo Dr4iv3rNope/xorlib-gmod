@@ -13,8 +13,24 @@ function xorlib.LANGUAGE:Phrase(phraseID, text)
     return self
 end
 
+local missingPhrasesCatched = {}
+
 function xorlib.LANGUAGE:Get(phraseID, a1, a2, a3, a4, a5, a6, a7, a8, a9)
     local text = self.Phrases[phraseID]
+
+    if text == nil then
+        if not missingPhrasesCatched[phraseID] then
+            missingPhrasesCatched[phraseID] = true
+
+            x.ErrorNoHaltWithStack(
+                "Language \"%s\" doesn't have phrase \"%s\"!",
+                self.Name,
+                phraseID
+            )
+        end
+
+        return phraseID
+    end
 
     if a1 then
         local lookupTable = {
@@ -37,6 +53,20 @@ end
 
 function xorlib.LANGUAGE:GetEx(phraseID, a1, a2, a3, a4, a5, a6, a7, a8, a9)
     local text = self.Phrases[phraseID]
+
+    if text == nil then
+        if not missingPhrasesCatched[phraseID] then
+            missingPhrasesCatched[phraseID] = true
+
+            x.ErrorNoHaltWithStack(
+                "Language \"%s\" doesn't have phrase \"%s\"!",
+                self.Name,
+                phraseID
+            )
+        end
+
+        return phraseID
+    end
 
     if a1 then
         local function tryGetPhrase(argPhrase)
